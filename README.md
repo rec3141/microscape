@@ -1,4 +1,4 @@
-# microscape
+# Microscape: An Interactive Web Application for Microbiome Analysis
 Visualizing Microbial Landscapes
 
 
