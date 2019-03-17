@@ -16,11 +16,26 @@ library(dada2); packageVersion("dada2")
 # need to add quality flag, figure out how to deal with different naming schemes
 # can't base plate well off of run name
 source("microscape-s00-setup.r")
+# 
+# cleannames <- function(x) {
+#   x <- gsub(patt="18sPlate",repl="18S-Plate",x=x)
+#   x <- gsub(patt="16sPlate",repl="16S-Plate",x=x)
+#   x <- gsub(patt="16SPlate",repl="16S-Plate",x=x)
+#   x <- gsub(patt="ITSPlate",repl="ITS-Plate",x=x)
+#   x <- gsub(patt="Plates",repl="Plate",x=x)
+#   x <- gsub(patt="Plate-",repl="Plate",x=x)
+#   x
+# }
+# seqtab <- readRDS(file.path(outfolder,"seqtab_final.rds")) # 
+# rownames(seqtab) <- cleannames(rownames(seqtab))
+# saveRDS(seqtab,file="seqtab_final.rds")
 
 # read from disk
 seqtab <- readRDS(file.path(outfolder,"seqtab_final.rds")) # 
 rownames(seqtab) <- toupper(rownames(seqtab))
+
 taxout <- readRDS(file.path(outfolder,"taxout.rds"))
+
 metadata <- readRDS(file.path(outfolder,"metadata.rds"))
 rownames(metadata) <- toupper(rownames(metadata))
 
@@ -55,14 +70,16 @@ rownames(metadata)[duplicated(rownames(metadata))]
 # how many have valid sequences but not tags
 length(setdiff(rownames(seqtab),rownames(metadata)))
 # 247
+# 421
 
 # how many have valid tags but not sequences
 length(setdiff(rownames(metadata),rownames(seqtab)))
 # 1661
+# 2031
 
 length(intersect(rownames(seqtab),rownames(metadata)))
 # 6055
-
+# 5881
 
 # define sample sets
 # samples_ITS <- which(grepl("/ITS",rownames(seqtab),ignore.case=T))

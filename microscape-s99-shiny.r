@@ -1,4 +1,6 @@
 library(shiny)
+library(filehash)
+library(igraph) # for E
 library(ape) #phylogenetics
 #library(phytools) #
 library(phyloseq)
@@ -6,8 +8,6 @@ library(ggplot2)
 theme_set(theme_bw())
 library(msa)
 library(phangorn)
-# source("microscape-s99-shiny.r"); shinyApp(ui = ui, server = server)
-
 library(gdata) # for read.xls
 library(marmap) # for fortify.bathy and plot.bathy
 library(ncdf4) # for netCDF
@@ -15,217 +15,258 @@ library(vegan) #for metaMDS
 library(Rtsne) #for Rtsne
 library(spdep) #for Rotation
 library(tidyr) 
+library(scales)
+
+
+# run app from /work/cryomics/seq_data/Arctic_Amplicon_clean
+# library(shiny)
+# runApp(appDir="microscape")
+
+# or work interactively from /work/cryomics/seq_data/Arctic_Amplicon_clean/microscape
+
+# old way
+# source("microscape-s99-shiny.r"); shinyApp(ui = ui, server = server)
+
+
+# deploy
+# link needed files into ./microscape dir
+# library(rsconnect)
+
+# tags<- rsconnect::appDependencies()
+# pkgDep(tags$package[tags$source=="CRAN"], suggests =FALSE, enhances = FALSE)
+# dg <- makeDepGraph(tags$package[tags$source=="CRAN"], suggests=F, enhances = F)
+# pdf(file="file.pdf",width=72,height=72)
+# plot(dg, legendPosition = c(-1, -1), vertex.size = 10, cex = 0.7)
+# dev.off()
+
+# options(rsconnect.http = "curl") #got an error using default Rcurl
+# options(rsconnect.max.bundle.size=3145728000)
+# configureApp("microscape",logLevel="verbose")
+# options(repos = BiocInstaller::biocinstallRepos())
+# rsconnect::deployApp(logLevel="verbose")
+
+# need a microscape-s90-shiny-setup.r that does all the softlinking and making the shiny directory
 
 # each tab filters the next? 
 # no... should they affect each other?
+# add a "filter by viewport" checkbox to allow choice
 # Step 1) Select samples
 # Step 2) Select taxa
 # Step 3) Select geography
 # Step 4) Select environmental
 
+# allow sparcc correlations on selected subsets?
+
 #### load required data
 
-outfolder <- "out_dada"
+source("microscape-s00-setup.r")
+outfolder <- "."
 options(expressions=50000)
 system("ulimit -s 16384")
 
-taxout <- readRDS(file.path(outfolder,"taxout.rds"))
-bootout <- readRDS(file.path(outfolder,"bootout.rds"))
-proptab <- readRDS(file.path(outfolder,"proptab_final.rds"))
-tt.cols <- ncol(proptab)
-tt.rows <- nrow(proptab)
-seqtab <- readRDS(file.path(outfolder,"seqtab_final.rds"))
+# options(shiny.error = browser)
+
+taxout <- readRDS(file.path(outfolder,"taxout_edit.rds")) #changed from taxout.rds
+bootout <- readRDS(file.path(outfolder,"bootout_edit.rds")) #changed from bootout.rds
+proptab <- readRDS(file.path(outfolder,"proptab_filt.rds"))
+proptab.ord <- t(apply(proptab,1,sort.list,dec=T))
+
+num.taxa <- ncol(proptab)
+num.samples <- nrow(proptab)
+seqtab <- readRDS(file.path(outfolder,"seqtab_filt.rds"))
+normtab <- readRDS(file.path(outfolder,"normtab_filt.rds"))
 rs.seqtab <- rowSums(seqtab)
-sample.cex <- log10(rs.seqtab)/3
+table_list <- readRDS(file.path(outfolder,"table_list.rds"))
+primer_list <- unique(table_list)
+primer_list <- sort(primer_list[!is.na(primer_list)])
 
-# old, may need to redo this but probs not
-# sample.tsp.bray <- readRDS(file.path(outfolder,"sample_bray_tsp.rds"))
-# convert_small <- proptab[sample.tsp.bray,]
+sample.cex <- 1*log10(rs.seqtab)/max(log10(rs.seqtab))
+bio.cex.mult <- 10
+bio.cex.div <- 1 #inverse
+bio.max.taxa <- 10 #num.taxa #maximum overlaid dots, decrease for faster plotting (downsample)
 
-#this sets up the taxa lists for each reference database
-taxa.list <- list()
-names.list <- list()
-for(ref in names(taxout)) {
-    print(ref)
+net.cex.mult <- 100 #scaling for network points
+net.cex.div <- 1 #inverse
+edge.min <- 3
+edge.max <- 10
 
-    taxa.list[[ref]] <- unname(taxout[[ref]][colnames(proptab),6])
-    for(i in ncol(taxout[[ref]]):1) {
-        taxa.list[[ref]][is.na(taxa.list[[ref]])] <- taxout[[ref]][colnames(proptab)[is.na(taxa.list[[ref]])],i]
-    }
-    taxa.list[[ref]] <- c("",taxa.list[[ref]])
+biospatial.px <- 800
+network.px <- 800
 
-    taxlevels <- NULL
-    # which taxa levels to use
-    if (grepl("BOLD",ref)) { taxlevels = c("Superkingdom","Phylum","Class","Order","Family","Genus","Species","Accession")
-    } else if (ref=="ref_dada2_ITSoneDB_rep_seq_1.131.fasta") { taxlevels = c("Root","Domain","Kingdom","Subkingdom","Phylum","Subphylum","Superclass","Class","Subclass","Infraclass","Superorder","Order","Suborder","Superfamily","Family","Subfamily","Genus","Species","Accession")
-    } else if (ref=="ref_dada2_phytoref_cyano.fasta") { taxlevels = c("Domain","Phylum","Class","Order","Family","Genus","Species","Accession")
-    } else if (ref=="ref_dada2_phytoref_euks.fasta") { taxlevels = c("Domain","Major_clade","Phylum","Class","Subclass","Order","Suborder","Family","Genus","Species","Accession")
-    } else if (ref=="ref_dada2_pr2_version_4.10.0.fasta") {taxlevels = c("Kingdom","Supergroup","Division","Class","Order","Family","Genus","Species")
-    } else if (ref=="ref_dada2_silva_nr_v132_train_set.fasta") { taxlevels = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus")
-    } else if (ref=="ref_dada2_silva_nr_v123_train_set.fasta") { taxlevels = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus")
-    } else if (ref=="ref_dada2_silva_v132.fasta") { taxlevels=c("Root","Domain","Major_clade","Superkingdom","Kingdom","Subkingdom","Infrakingdom","Superphylum","Phylum","Subphylum","Infraphylum","Superclass","Class","Subclass","Infraclass","Superorder","Order","Suborder","Superfamily","Family","Subfamily","Genus","Accession")
-    } else { taxlevels = NULL}
-    print(taxlevels)
-    colnames(taxout[[ref]]) <- taxlevels
+#i had a note that says this wouldn't work, don't remember why
+taxa.list <- readRDS(file.path(outfolder,"taxa_list.rds"))
+names.list <- readRDS(file.path(outfolder,"names_list.rds"))
 
-    taxchoose <- intersect(taxlevels,c("Superkingdom","Kingdom","Phylum","Order","Family","Genus","Species","Accession"))
-    names.list[[ref]] <- as.list(tidyr::unite(data.frame(taxout[[ref]][colnames(proptab),]), taxchoose, sep=";"))
-    esvs <- paste0("ESV_",1:ncol(proptab))
-    names.list[[ref]] <- paste(names.list[[ref]],esvs,sep=";")
-
-    mapply(c, first, second, SIMPLIFY=FALSE)
-    
-}
-
-# this sets up the sample list from the metadata sheet
-metadata <- readRDS(file.path(outfolder,"metadata.rds"))
-sample.list <- c("",metadata$desc)
 
 # select which mappings to use for samples
 sample.tsne <- readRDS(file.path(outfolder,"sample_bray_tsne.rds"))
+
 # rotate for better view
-sample.tsne.rot <- Rotation(sample.tsne,90*pi/180)
+sample.tsne.rot <- Rotation(sample.tsne,235*pi/180)
 tsne.here <- data.frame(sample.tsne.rot)
 colnames(tsne.here) <- c("x","y")
 
+# this sets up the sample list from the metadata sheet
+metadata.in <- readRDS(file.path(outfolder,"metadata.rds"))
+metadata.in <- metadata.in[,c("cellid","desc")]
+rownames(metadata.in) <- NULL
+metadata <- metadata.in[!duplicated(metadata.in$cellid),]
+rownames(metadata) <- metadata$cellid
+metadata <- metadata[rownames(proptab),"desc",drop=F]
+
+sample.list <- c("",metadata$desc)
+
 # select which mappings to use for sequences
-seq.tsne <- readRDS(file.path(outfolder,"seq_bray_tsne.rds"))
+#choices are differential abundance, or correlation network, but corr net much smaller
+seq.tsne <- readRDS(file.path(outfolder,"seq_bray_tsne.rds")) 
+seq.tsne <- Rotation(seq.tsne,90*pi/180)
+
+ref <- "ref_dada2_silva_nr_v132_train_set.fasta"
+taxlevels <- colnames(taxout[[ref]])
+
+#make default colors
+{
+		#update when choosing taxon
+		leg.taxa <- unlist(lapply(names.list[[ref]],function(x) paste0(strsplit(x,";")[[1]][6:7],collapse=" ")))
+
+		#colors for biospatial plot
+		# color.biospatial <- rainbow(4*((num.taxa %/% 4) +1)) #did this so that nearby taxa had different colors to easily distinguish them
+		# color.biospatial <- as.character(t(matrix(color.biospatial,nrow=4)))
+		# color.biospatial <- color.biospatial[order(newnames)]
+		color.biospatial <- rainbow(num.taxa)[order(names.list[[ref]])]
+
+		#default colors for network plot
+		color.network <- rep("#427df4",times=num.taxa) #blue default Bacteria
+		color.network[grep("Alphaproteobacteria",names.list[[ref]])] <- "#0033ff" #blue
+		color.network[grep("Betaproteobacteria",names.list[[ref]])] <- "#1897ff" #blue
+		color.network[grep("Gammaproteobacteria",names.list[[ref]])] <- "#1dcdf9" #blue
+		color.network[grep("Bacteroidetes",names.list[[ref]])] <- "#0ee0d2" #blue
+		color.network[grep("Archaea",names.list[[ref]])] <- "#f9f03e" #yellow
+		color.network[grep("Eukaryota",names.list[[ref]])] <- "#f44265" #red
+		color.network[grep("Metazoa",names.list[[ref]])] <- "#f463f9" #purple
+		color.network[grep("Chloroplast",names.list[[ref]])] <- "#0fe047" #green
+		color.network[grep("Ochrophyta",names.list[[ref]])] <- "#0ee047" #green
+		color.network[grep("Chlorophyta",names.list[[ref]])] <- "#0de047" #green
+		color.network[grep("Syndiniales",names.list[[ref]])] <- "#f91bf5" #purple
+		color.network[grep("Mitochondria",names.list[[ref]])] <- "#42e5f4" #orange
 
 
-leg.taxa <- unlist(lapply(newnames,function(x) paste0(strsplit(x,";")[[1]][6:7],collapse=" ")))
-
-# load("save.weights.Rdata")
-# load("save.graphs.Rdata")
-
-#colors for biospatial plot
-# color.biospatial <- rainbow(4*((ncol(proptab) %/% 4) +1)) #did this so that nearby taxa had different colors to easily distinguish them
-# color.biospatial <- as.character(t(matrix(color.biospatial,nrow=4)))
-# color.biospatial <- color.biospatial[order(newnames)]
-color.biospatial <- rainbow(ncol(proptab))[order(newnames)]
-
-#default colors for network plot
-color.network <- rep("#427df4",times=ncol(proptab)) #blue default Bacteria
-color.network[grep("Alphaproteobacteria",newnames)] <- "#0033ff" #blue
-color.network[grep("Betaproteobacteria",newnames)] <- "#1897ff" #blue
-color.network[grep("Gammaproteobacteria",newnames)] <- "#1dcdf9" #blue
-color.network[grep("Bacteroidetes",newnames)] <- "#0ee0d2" #blue
-color.network[grep("Archaea",newnames)] <- "#f9f03e" #yellow
-color.network[grep("Eukaryota",newnames)] <- "#f44265" #red
-color.network[grep("Metazoa",newnames)] <- "#f463f9" #purple
-color.network[grep("Chloroplast",newnames)] <- "#0fe047" #green
-color.network[grep("Ochrophyta",newnames)] <- "#0ee047" #green
-color.network[grep("Chlorophyta",newnames)] <- "#0de047" #green
-color.network[grep("Syndiniales",newnames)] <- "#f91bf5" #purple
-color.network[grep("Mitochondria",newnames)] <- "#42e5f4" #orange
-
-tax.levels <- colnames(taxout$ref_dada2_silva_nr_v132_train_set.fasta$tax)
-
-#write to fasta format
-dada2fasta <- function(esvs,taxanames,taxon) {
-    which.taxa <- grepl(taxon,taxanames)
-    saved <- paste0(">",taxanames[which.taxa],"\n",colnames(esvs)[which.taxa],"\n")
-    cat(saved,sep="")
 }
 
-#phylo
-# do this outside and then subset it for plotting
-# convert selected sequences to DNAbin
-# outfolder <- rev(dir("./",pattern="out_dada*"))[1]
-# but not yet merged
-## seqtab <- readRDS(paste0(outfolder,"/seqtab_final.rds")) # 
-## taxout <- readRDS(paste0(outfolder,"/taxout.rds"))
-# seqs.raw <- sapply(strsplit(colnames(proptab),""), tolower)
-# 
-# names(seqs.raw) <- colnames(proptab)
-# seqs.bin <- as.DNAbin(seqs.raw)
-# # read in metadata
-# 
-# seqs.otu <- otu_table(t(proptab), taxa_are_rows = TRUE)
-# seqs.tax <- tax_table(taxout$ref_dada2_silva_nr_v132_train_set.fasta$tax[colnames(proptab),])
-# seqs.physeq <- phyloseq(seqs.otu, seqs.tax)
-# save(seqs.physeq,file="seqs.physeq.Rdata")
+# if(!any(grepl("save.weights",ls())) & !any(grepl("save.graphs",ls()))) {
+# 	save.w <- save.weights[as.character(seq(1,100,10))]
+# 	saveRDS(save.w,file.path(outfolder,"network_weights_reduced.rds"))
+
+# 	save.weights <- readRDS(file.path(outfolder,"network_weights_reduced.rds"))
+#	save.graphs <- readRDS(file.path(outfolder,"network_graphs.rds"))
+# 	save.graphs <- save.graphs[as.character(seq(1,100,10))]
+
+# }
+
+	#newer simpler version
+save.weights <- readRDS(file.path(outfolder,"network_melt.rds")) # esv1, esv2, weight, color
+
+# if networking doesn't finish completely, need to limit options
+netcutoff <- as.numeric(strsplit(strsplit(list.files(outfolder,pattern="sparcc_out*")[1],"_")[[1]][3],".",fixed=T)[[1]][1])
+taxa.in.network <-  unname(colSums(normtab>0)>netcutoff)
+taxa.in.network.esvs <- paste0("ESV_",which(taxa.in.network))
+
+# rework to use PhyloSeq
 #load(file="seqs.physeq.Rdata")
 
 #        seqs.meta <- sample_data()
 #        seqs.physeq <- merge_phyloseq(seqs.physeq, sampledata, seqs.tree)
 
 
-#mapping
+# for mapping
+# 
+# # open the netCDF file
+# nc <- nc_open("/scratch/SKQ201813S/underway/ETOPO2v2g_f4.nc")
+# etopo.in <- ncvar_get(nc, "z") #get depths
+# 
+# # do some stuff I copied from the web
+# colnames(etopo.in) <- ncvar_get(nc, "y")
+# rownames(etopo.in) <- ncvar_get(nc, "x")
+# class(etopo.in) <- "bathy"
 
 
-# open the netCDF file
-nc <- nc_open("/scratch/SKQ201813S/underway/ETOPO2v2g_f4.nc")
-etopo.in <- ncvar_get(nc, "z") #get depths
-
-# do some stuff I copied from the web
-colnames(etopo.in) <- ncvar_get(nc, "y")
-rownames(etopo.in) <- ncvar_get(nc, "x")
-class(etopo.in) <- "bathy"
 
 ########### START WEBSITE
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
 
   # App title ----
-  titlePanel("Microscape v0.00001"),
+  titlePanel("Microscape v0.00003"),
 
     fluidRow(
-        column(
-    
-      # Input: Slider for the number of bins ----
-      selectInput(inputId = "taxon", label = "Show single taxon", choices = taxa.list),
-      textAreaInput(inputId = "plot.taxa.regex", label="Show all matching taxa (regex)", value=NULL),
-      selectInput(inputId = "sample", label = "Show single sample", choices = sample.list),
-      textAreaInput(inputId = "plot.sample.regex", label="Show all matching samples (regex)", value=NULL),
-        #slider value set to one higher than maximum reported network correlation
-      sliderInput("network.cor", "N: Minimum SparCC correlation", min = 0.01, max = 1, value = (0.01+length(save.weights)/100), step=0.01),
-      sliderInput("min.taxa.hits", "N: Minimum samples per ESV (log2)", min = 0.0, max = 12.0, value = 0),
-      sliderInput("min.reads", "S: Minimum sample reads (log2)", min = 0.0, max = 20.0, value = 17.0),
-      sliderInput("min.richness", "S: Minimum sample richness (log2)", min = 0.0, max = 10.0, value = 1.0),
-
-      width=3,class = "well"
+    column(
+     tabsetPanel(type = "tabs", id= "options", 
+      tabPanel("Samples", value="sample-options",
+		  selectInput(inputId = "sample", label = "Show single sample", choices = sample.list),
+		  textAreaInput(inputId = "plot.sample.regex", label="Show all matching samples (regex)", value=NULL),
+		  sliderInput("min.reads", "Minimum sample reads (log2)", min = 0.0, max = 20.0, value = 10.0),
+		  sliderInput("min.richness", "Minimum sample richness (log2)", min = 0.0, max = 10.0, value = 1.0),
+		  sliderInput("point.biospatial", "Point size (log)", min = -20.0, max = 20.0, value = 0),
+		  actionButton(inputId="reset.zoom", label="Reset Zoom"),
+		  sliderInput("plot.all.names", label="Show some random names", min=0, max=25, value = 0),
+		  selectInput("tax.levels", "P: Taxonomic levels", taxlevels, multiple=TRUE, selected="Genus"),
+		  textAreaInput(inputId = "plot.names", label="Show these names (regex)", value=NULL)
+      ),
+      tabPanel("Taxa Network", value="taxa-options",
+		  selectInput(inputId = "ref", label = "Taxonomy Database", choices = names(taxa.list), selected="ref_dada2_silva_nr_v132_train_set.fasta"),
+		  selectInput(inputId = "primers", label = "Primer/Target Pairs", choices = primer_list, multiple=TRUE, selected=c("16S_prokaryote", "18S_protist", "ITS_all")),
+		  radioButtons(inputId = "primers.log", label = "Primer/Target required", choices = c("AND","OR"), selected = "AND", inline = TRUE),
+		  selectInput(inputId = "taxon", label = "Show single taxon", choices = c("",taxa.list[[ref]])),
+		  textAreaInput(inputId = "plot.taxa.regex", label="Show all matching taxa (regex)", value=NULL),
+		  sliderInput("min.taxa.hits", "Minimum samples per ESV (log2)", min = 0.0, max = 12.0, value = 6),
+		  sliderInput("point.network", "Point size (log)", min = -20.0, max = 20.0, value = 0),
+			#slider value set to one higher than maximum reported network correlation
+	#       sliderInput("network.cor", "N: Minimum SparCC correlation", min = 0.11, max = 1, value = (0.01+length(save.weights)/100), step=0.01),
+		  sliderInput("network.cor", "N: Minimum SparCC correlation", min = 0, max = 1, value = 0.71, step=0.01, round=-2),
+		  actionButton(inputId="reset.zoom", label="Reset Zoom"),
+          sliderInput("plot.all.names", label="Show some random names", min=0, max=25, value = 0),
+		  selectInput("tax.levels", "P: Taxonomic levels", taxlevels, multiple=TRUE, selected="Genus"),
+		  textAreaInput(inputId = "plot.names", label="Show these names (regex)", value=NULL)
+	  ),
+      tabPanel("Phylogenetic", value="phylogenetic-options",
+		  sliderInput("tree.height", "P: Tree height limits", min = -1000, max = 2000.0, value = c(0,20.0)),
+		  sliderInput("tree.width", "P: Tree width limits", min = -500, max = 2000, value = c(0,100)),
+		  sliderInput("tree.font.size", "P: Tree font size", min = 0, max = 20, value = 10),
+		  sliderInput("tree.colors", "P: Rotate tree colors", min = 0, max = 6, value = c(0,0), step=0.1),
+		  selectInput("tax.levels", "P: Taxonomic levels", taxlevels, multiple=TRUE, selected="Genus"),
+		  checkboxInput("tax.boots", "P: Taxonomic bootstraps", FALSE)
+      )
+#       tabPanel("Geographic", value="geographic-options",
+# 		  sliderInput("longitude", "M: Longitude", min = -200, max = 200, value = c(-170,-150)),
+# 		  sliderInput("latitude", "M: Latitude", min = -90, max = 90, value = c(55,75))
+#       )
+	), width=3, class="well"
     ),
 
-    
     column(
      tabsetPanel(type = "tabs", id = "tabs",
         tabPanel("Samples", value="biospatial",
             span(textOutput("samplename"), style="font-size:120%; text-align:center"),
-            div(style = "height:700px;", plotOutput("biospatial", hover = "biospatial_hover", click = "biospatial_click", dblclick="biospatial_dblclick"))
+            div(style = "height:800px;", plotOutput("biospatial", hover = "biospatial_hover", click = "biospatial_click", dblclick="biospatial_dblclick"))
         ),
-        tabPanel("Network", value="network",
+        tabPanel("Taxa Network", value="network",
             span(textOutput("taxaname"), style="font-size:95%; text-align:center"),
             div(style = "height:700px;", plotOutput("network", hover = "network_hover", click = "network_click", dblclick="network_dblclick"))
         ),
-        tabPanel("Map", plotOutput("geographic")),
-        tabPanel("Environmental", plotOutput("environmental")),
         tabPanel("Phylogenetic", value="phylogenetic", 
              div(style = "height:1000px;", plotOutput("phylogenetic", hover = "phylogenetic_hover", click = "phylogenetic_click", dblclick="phylogenetic_dblclick"))
-        ),
-        tabPanel("Functional", plotOutput("functional"))
+        )
+#         tabPanel("Functional", plotOutput("functional")),
+#         tabPanel("Geographic", plotOutput("geographic")),
+#         tabPanel("Environmental", plotOutput("environmental"))
         
 
-     ),width=5, height=12, class="well"
+     ),width=6, height=12, class="well"
     ),
-    column(
-      div(tableOutput("overunder"), style = "font-size:80%"),
-      div(tableOutput("rhtable"), style = "font-size:80%"),
-      sliderInput("plot.all.names", label="Show some random names", min=0, max=25, value = 0),
-      textAreaInput(inputId = "plot.names", label="Show these names (regex)", value=NULL),
-      sliderInput("point.scalar", "Point size scalar (log)", min = -20.0, max = 20.0, value = 0),
-      br(),
-      actionButton(inputId="reset.zoom", label="Reset Zoom"),
-      br(),
-      sliderInput("tree.height", "P: Tree height limits", min = -1000, max = 2000.0, value = c(0,20.0)),
-      sliderInput("tree.width", "P: Tree width limits", min = -500, max = 2000, value = c(0,100)),
-      sliderInput("tree.font.size", "P: Tree font size", min = 0, max = 20, value = 10),
-      sliderInput("tree.colors", "P: Rotate tree colors", min = 0, max = 6, value = c(0,0), step=0.1),
-      selectInput("tax.levels","P: Taxonomic levels", tax.levels, multiple=TRUE, selected="genus"),
-      sliderInput("longitude", "M: Longitude", min = -200, max = 200, value = c(-170,-150)),
-      sliderInput("latitude", "M: Latitude", min = -90, max = 90, value = c(55,75)),
-
-      width=4, class="well"
-    )
+	column(
+		div(tableOutput("overunder"), style = "font-size:80%"),
+		div(tableOutput("rhtable"), style = "font-size:80%")	
+	,width=3, class="well")
   )
 )
 
@@ -240,9 +281,35 @@ server <- function(input, output, session) {
     oldzoom <- reactiveValues(z=0)
     picks <- reactiveValues(taxa=NULL,samples=NULL)
     point.size <- reactiveValues(biospatial=0, network=0, input=NULL)
-    color <- reactiveValues(phylo=rep(NA,ncol(proptab)))
+    color <- reactiveValues(phylo=rep(NA,num.taxa))
     last <- reactiveValues(seqs=NULL); isolate(last$seqs)
+	taxa <- reactiveValues(list=NULL,names=NULL)
 
+	# keep things up to date
+	observe({
+		taxa$list <- taxa.list[[input$ref]]
+		taxa$names <- names.list[[input$ref]]
+	    updateSelectInput(session = session, inputId = "taxon", label = "Show single taxon", choices = c("",taxa$list))
+		updateSelectInput(session = session, inputId = "tax.levels", label = "P: Taxonomic levels", 
+			choices = colnames(taxout[[input$ref]]))
+
+        # if input$network.cor is too high for selected taxa, lower it
+        # shouldn't affect which vertices are plotted, just which edges
+        # bring in saved weights
+#        print(head(save.weights[[ as.character(input$network.cor*100) ]]))
+        network_cor <- input$network.cor
+
+# old        while(is.null(save.weights[[ as.character(network_cor*100) ]] ) & network_cor > 0) {
+# can skip this now that we're doing it the network_melt way
+#         while(is.null(save.weights[[ as.character(network_cor*100) ]] ) & network_cor > 0) {
+#             network_cor <- network_cor - 0.01
+# 	        print(network_cor)
+#         }
+#         if(network_cor == 0) network_cor <- 0.71
+#         isolate({updateSliderInput(session, "network.cor", value = network_cor)})
+		print(input$network.cor)
+	})
+	
     # some functions
    xy_biospatial <- function(e) {
         if(is.null(e)) return(NULL)
@@ -287,7 +354,7 @@ server <- function(input, output, session) {
             as.character("​") #had to use zero width space (U+200B) to avoid wiping
         } else {
             if(picks$taxa[xy_network(input$network_hover)]) {
-                newnames[xy_network(input$network_hover)]
+                taxa$names[xy_network(input$network_hover)]
             } else {
                 as.character("​") #had to use zero width space (U+200B) to avoid wiping
             }
@@ -299,11 +366,11 @@ server <- function(input, output, session) {
     ###############
 
       output$biospatial <- renderPlot({
-      
+
       # MECHANICS AND ZOOM
         if(is.null(ranges$biospatial_xlim)) ranges$biospatial_xlim <- c(-50,50)
         if(is.null(ranges$biospatial_ylim)) ranges$biospatial_ylim <- c(-50,50)
-        point.size$biospatial <- input$point.scalar
+        point.size$biospatial <- input$point.biospatial
         
         if(input$reset.zoom > oldzoom$z & input$tabs=="biospatial") {
             ranges$biospatial_xlim=c(-50,50)
@@ -348,11 +415,11 @@ server <- function(input, output, session) {
         min.richness.samples <- rowSums(proptab>0) >= 2^input$min.richness
 
         # initialize 
-        sample.user.regex <- rep(FALSE,tt.rows)
+        sample.user.regex <- rep(FALSE,num.samples)
         # print(input$sample)
         # if user doesn't provide a lone sample or a regex, select all
         if(input$sample=="" & input$plot.sample.regex=="") {
-            sample.user.regex <- rep(TRUE,tt.rows)
+            sample.user.regex <- rep(TRUE,num.samples)
         # if user provides a lone sample and no regex, grep for it
         } else if (input$sample!="" & input$plot.sample.regex=="") {
             sample.user.regex <- metadata$desc==input$sample
@@ -370,6 +437,21 @@ server <- function(input, output, session) {
         }
 
 
+		# select subset of samples that have matching primer pairs
+		samples.with.primer <- rep(TRUE, num.samples)
+		if(input$primers.log == "OR") {
+			# only select samples that have ANY user selected primers
+			samples.with.primer <- rowSums(proptab[,table_list %in% input$primers])>0
+		} else if (input$primers.log == "AND") {
+			# only select samples that have ALL user selected primers
+			for(primer in input$primers) {
+				print(primer)
+				samples.with.primer <- samples.with.primer & rowSums(proptab[,table_list %in% primer])>0
+			}
+		} else {
+			print("go away you should not be here!")
+		}
+
         # don't waste time calculating and plotting things that aren't in the view box
         samples.in.box <- sample.tsne.rot[,1] > ranges$biospatial_xlim[1] & 
         sample.tsne.rot[,1] < ranges$biospatial_xlim[2] & 
@@ -379,41 +461,48 @@ server <- function(input, output, session) {
         # put all the sample filters together
         # QC and holdup
 
-        picks$samples <- min.reads.samples & min.richness.samples & sample.user.regex & samples.in.box
+
+        map.samples <- min.reads.samples & min.richness.samples & samples.in.box & samples.with.primer
+
+        picks$samples <- map.samples & sample.user.regex
+
         # print(paste(metadata$desc[picks$samples],sep="\n"))
-        sps <- sum(picks$samples)
+        pss <- sum(picks$samples)
 
-        if(sps==0) {print("biospatial stopped"); return(0)}
+        if(pss==0) {print("biospatial stopped; no samples selected"); return(0)}
 
-        map.samples <- min.reads.samples & min.richness.samples & samples.in.box
+		# PLOT 4: Sample map with circles proportional to relative abundance in n
         # plot the basic outline of selected samples
-        plot(sample.tsne.rot[map.samples,],pch=19,cex=sample.cex[picks$samples],col="grey",axes=FALSE,ann=FALSE,xlim=ranges$biospatial_xlim,ylim=ranges$biospatial_ylim)
+        plot(sample.tsne.rot[map.samples,], pch=19, cex=sample.cex[map.samples], col="grey", axes=FALSE, ann=FALSE, xlim=ranges$biospatial_xlim, ylim=ranges$biospatial_ylim)
 
-
+# why?        plot(sample.tsne.rot[map.samples,], pch=19, cex=sample.cex[picks$samples], col="grey", axes=FALSE, ann=FALSE, xlim=ranges$biospatial_xlim, ylim=ranges$biospatial_ylim)
 
         #### THEN TAXA
 
         # initialize
-        taxa.user.regex <- rep(FALSE,tt.cols)
+        taxa.user.regex <- rep(FALSE,num.taxa)
 
         # if user doesn't provide a taxon or a regex, select all
         # print(input$taxon)
         if(input$taxon=="" & input$plot.taxa.regex=="") {
-            taxa.user.regex <- rep(TRUE,tt.cols)
+            taxa.user.regex <- rep(TRUE,num.taxa)
         # else if user provides a lone taxon and no regex, grep it
         } else if (input$taxon!="" & input$plot.taxa.regex=="") {
-            taxa.user.regex <- grepl(x=newnames,pattern=input$taxon)
+            taxa.user.regex <- grepl(x=taxa$names,pattern=input$taxon)
         } else if(input$plot.taxa.regex!="") {
         # if user provides a list of regex, split and search each one, ORing
             patterns <- strsplit(x=input$plot.taxa.regex,split="\n")[[1]]
             for(patt in patterns) {
                 # print(patt)
                 if(patt=="\n") next
-                taxa.user.regex <- taxa.user.regex | grepl(x=newnames, pattern=patt)
+                taxa.user.regex <- taxa.user.regex | grepl(x=taxa$names, pattern=patt)
             }
         } else {
             print("biospatial taxa: how did you get here?")
         }
+
+		# select subset of taxa that match user selected primer targets
+		taxa.with.primer <- table_list %in% input$primers
 
         # filter by what's shown in taxa box
         taxa.in.box <- seq.tsne[,1] > ranges$network_xlim[1] & 
@@ -426,48 +515,81 @@ server <- function(input, output, session) {
 #         picks$taxa <- picks$taxa & taxa_mult_samples #infinite loop?
 
         # enforce slider limits over taxa choices
-        picks$taxa <- taxa.user.regex & taxa_mult_samples & taxa.in.box
-        # print(paste(newnames[picks$taxa],sep="\n"))
+#         print(dim(seq.tsne))
+#         print(c(length(taxa.user.regex) , length(taxa_mult_samples) , length(taxa.in.box)))
+        picks$taxa <- taxa.user.regex & taxa_mult_samples & taxa.in.box & taxa.with.primer
+        # print(paste(taxa$list[picks$taxa],sep="\n"))
 
+        pts <- sum(picks$taxa)
         # print(sum(picks$taxa))
-        ptl <- length(picks$taxa)
 
-        spt <- sum(picks$taxa)
-        if(spt==0) { print("biospatial stopped");return(0)} #no valid taxa selected
+        if(pts==0) { print("biospatial stopped; no taxa selected");return(0)} #no valid taxa selected
 
         # --> diverge
 
         #only color selected taxa -- not sure if this is necessary
-        color.taxa <- rep(NA,length(picks$taxa))
+        color.taxa <- rep(NA,num.taxa)
         color.taxa[which(picks$taxa)] <- color.biospatial[which(picks$taxa)]
 
         # if defined by phylogeny, add some color for plotting points
         color.taxa[which(!is.na(color$phylo))] <- color$phylo[which(!is.na(color$phylo))]
 
         # for each sample, sort pick.taxa from greatest to least, plot them
+        vsize.def <- rep(NA,num.taxa)
+
+		# can i just sort these once and re-use them? yes. proptab.ord
+		points.save <- NULL
+		vsize.save <- NULL
+		color.save <- NULL
         for(n in which(picks$samples)) {
             if(n %% 100 == 0) print("working")
-            seq.ra <- unname(proptab[n,,drop=F])
-#             print(which(picks$taxa))
-            seq.ra[!picks$taxa] <- 0
-            seq.ra[seq.ra==0] <- NA
-            seq.order <- order(seq.ra,decreasing=T,na.last=NA)
-#             print(seq.order)
+#             seq.ra <- unname(proptab[n,,drop=F])
+# #             print(which(picks$taxa))
+#             seq.ra[!picks$taxa] <- 0
+#             seq.ra[seq.ra==0] <- NA
+#             seq.order <- order(seq.ra,decreasing=T,na.last=NA)
+# #             print(seq.order)
 
-            vsize <- rep(NA,length(picks$taxa))
-            vsize[seq.order] <- unname(sqrt(sqrt(proptab[n,seq.order,drop=F]/1000)))
+			#scale point sizes
+            vsize <- vsize.def
+            vsize <- bio.cex.mult*unname(sqrt(sqrt(proptab[n,]/bio.cex.div)))
             vsize <- vsize*1.1^point.size$biospatial
 
-            # PLOT 4: Sample map with circles proportional to relative abundance in n
-            tsne.plot <- cbind(rep(tsne.here[n,1],ptl),rep(tsne.here[n,2],ptl))
-            tsne.plot <- data.frame(tsne.plot)
-            colnames(tsne.plot) <- c("x","y")
+			#filter
+			vsize[vsize==0] <- NA
+			vsize[!picks$taxa] <- NA
+
+			#reorder
+			seq.order <- proptab.ord[n,]
+			
+			#trim and plot/ in this order
+			vsize.plot <- vsize[seq.order]
+
+			#coords
+			num.vals <- sum(!is.na(vsize))
+            tsne.plot <- cbind("x"=rep(tsne.here[n,1],num.vals),"y"=rep(tsne.here[n,2],num.vals))
+			
+			color.plot <- color.taxa[seq.order]
+			color.plot <- color.plot[!is.na(vsize.plot)]
+
+			vsize.plot <- vsize.plot[!is.na(vsize.plot)]
+			
+            points(tsne.plot,pch=19,cex=vsize.plot,col=color.plot)    
+
+#             tsne.plot <- data.frame(tsne.plot)
+#             colnames(tsne.plot) <- c("x","y")
     #        tsne.plot.taxa <- rep("",length(pick.taxa))
-    #        tsne.plot.taxa[pick.taxa] <- newnames[which(pick.taxa)]
+    #        tsne.plot.taxa[pick.taxa] <- taxa$list[which(pick.taxa)]
 #             print(sort(vsize))
-            points(tsne.plot,pch=19,cex=vsize,col=color.taxa)    
+
+# this is much slower
+# what if you did just orders and not data
+# 			points.save <- rbind(points.save,tsne.plot)
+# 			vsize.save <- c(vsize.save, vsize)
+# 			color.save <- c(color.save, color.taxa)
         }
 
+#             points(points.save,pch=19,cex=vsize.save,col=color.save)    
 
 #         print(input$plot.all.names)
 #         print(input$plot.names)
@@ -489,7 +611,7 @@ server <- function(input, output, session) {
             }
         }
         print("done biospatial")
-    }, width=700,height=700)
+    }, width=biospatial.px,height=biospatial.px)
 
 
     ###############
@@ -507,7 +629,7 @@ server <- function(input, output, session) {
             oldzoom$z <- input$reset.zoom
         }
 
-        point.size$network <- input$point.scalar
+        point.size$network <- input$point.network
         
         if(!is.null(input$network_dblclick$x)) {
 
@@ -542,27 +664,30 @@ server <- function(input, output, session) {
         ### TAXA FIRST
       
         # initialize
-        taxa.user.regex <- rep(FALSE,tt.cols)
+        taxa.user.regex <- rep(FALSE,num.taxa)
 
         # if user doesn't provide a taxon or a regex, select all
         # print(input$taxon)
         if(input$taxon=="" & input$plot.taxa.regex=="") {
-            taxa.user.regex <- rep(TRUE,tt.cols)
+            taxa.user.regex <- rep(TRUE,num.taxa)
         # else if user provides a lone taxon and no regex, grep it
         } else if (input$taxon!="" & input$plot.taxa.regex=="") {
-            taxa.user.regex <- grepl(x=newnames,pattern=input$taxon)
+            taxa.user.regex <- grepl(x=taxa$names,pattern=input$taxon)
         } else if(input$plot.taxa.regex!="") {
         # if user provides a list of regex, split and search each one, ORing
             patterns <- strsplit(x=input$plot.taxa.regex,split="\n")[[1]]
             for(patt in patterns) {
                 # print(patt)
                 if(patt=="\n") next
-                taxa.user.regex <- taxa.user.regex | grepl(x=newnames, pattern=patt)
+                taxa.user.regex <- taxa.user.regex | grepl(x=taxa$names, pattern=patt)
             }
         } else {
             print("network taxa: how did you get here?")
         }
         
+		# only use taxa included in primer
+		taxa.with.primer <- table_list %in% input$primers
+
         #select taxa in multiple samples
         taxa_mult_samples <- colSums(proptab>0) >= 2^input$min.taxa.hits 
 
@@ -570,15 +695,11 @@ server <- function(input, output, session) {
         plot(seq.tsne[taxa_mult_samples,], pch=19, col="grey", cex=0.3, xlim=ranges$network_xlim, ylim=ranges$network_ylim, axes = FALSE, xlab = "", ylab = "")
 
         # enforce slider limits over taxa choices
-        picks$taxa <- taxa.user.regex & taxa_mult_samples
-        # print(paste(newnames[picks$taxa],sep="\n"))
+        picks$taxa <- taxa.user.regex & taxa_mult_samples & taxa.with.primer #& taxa.in.network 
+#         print(paste(taxa$list[picks$taxa],sep="\n"))
 
-        # print(sum(picks$taxa))
-        ptl <- length(picks$taxa)
-
-
-        spt <- sum(picks$taxa)
-        if(spt==0) {print("network stopped"); return(0)} #no valid taxa selected
+        pts <- sum(picks$taxa)
+        if(pts==0) {print("network stopped; no taxa selected"); return(0)} #no valid taxa selected
 
 
 
@@ -589,12 +710,12 @@ server <- function(input, output, session) {
         min.richness.samples <- rowSums(proptab>0) >= 2^input$min.richness
 
         # initialize 
-        sample.user.regex <- rep(FALSE,tt.rows)
+        sample.user.regex <- rep(FALSE,num.samples)
 
         # print(input$sample)
         # if user doesn't provide a lone sample or a regex, select all
         if(input$sample=="" & input$plot.sample.regex=="") {
-            sample.user.regex <- rep(TRUE,tt.rows)
+            sample.user.regex <- rep(TRUE,num.samples)
         # if user provides a lone sample and no regex, grep for it
         } else if (input$sample!="" & input$plot.sample.regex=="") {
             sample.user.regex <- metadata$desc==input$sample
@@ -611,7 +732,21 @@ server <- function(input, output, session) {
             print("network samples: how did you get here?")
         }
 
-        
+		# select subset of samples that have matching primer pairs
+		samples.with.primer <- rep(TRUE, num.samples)
+		if(input$primers.log == "OR") {
+			# only select samples that have ANY user selected primers
+			samples.with.primer <- rowSums(proptab[,table_list %in% input$primers])>0
+		} else if (input$primers.log == "AND") {
+			# only select samples that have ALL user selected primers
+			for(primer in input$primers) {
+				print(primer)
+				samples.with.primer <- samples.with.primer & rowSums(proptab[,table_list %in% primer])>0
+			}
+		} else {
+			print("go away you should not be here!")
+		}
+
         # don't waste time calculating and plotting things that aren't in the view box
         samples.in.box <- sample.tsne.rot[,1] > ranges$biospatial_xlim[1] & 
         sample.tsne.rot[,1] < ranges$biospatial_xlim[2] & 
@@ -621,70 +756,88 @@ server <- function(input, output, session) {
        # put all the sample filters together
         # QC and holdup
 
-        picks$samples <- min.reads.samples & min.richness.samples & sample.user.regex & samples.in.box
+        picks$samples <- min.reads.samples & min.richness.samples & sample.user.regex & samples.in.box & samples.with.primer
         # print(paste(metadata$desc[picks$samples],sep="\n"))
-        sps <- sum(picks$samples)
+        pss <- sum(picks$samples)
 
-         if(sps==0) {print("network stopped");return(0)}
+         if(pss==0) {print("network stopped; no samples selected");return(0)}
 
         # add some color for plotting points
-        color.taxa <- rep(NA,ncol(proptab))
+        color.taxa <- rep(NA,num.taxa)
         color.taxa[which(picks$taxa)] <- color.network[which(picks$taxa)]
         color.taxa[which(!is.na(color$phylo))] <- color$phylo[which(!is.na(color$phylo))]
 #         print(color$phylo[which(!is.na(color$phylo))])
         # --> diverge
-
-
-        # select taxa in requested network space: only plot if SparCC correlation passes threshold
-        
-        # if input$network.cor is too high for selected taxa, lower it
-        network_cor <- input$network.cor
-        # bring in saved weights
-        while(is.null(save.weights[network_cor*100][[1]])) {
-            network_cor <- network_cor - 0.01
-        }
-        isolate({updateSliderInput(session, "network.cor", value = network_cor)})
-        network_save_weights <- save.weights[[network_cor*100]]
-        # select positive and negative correlations
-        networked_taxa <- (network_save_weights[picks$taxa,,drop=F] > network_cor) | (network_save_weights[picks$taxa,,drop=F] < -1*network_cor)
- 
-        if(spt>1) {
-            networked_taxa <- colSums(networked_taxa) > 0 # collapse samples
-        }
-        # re-enforce limits and merge here 
-        networked_taxa <- networked_taxa & taxa_mult_samples
-        networked_taxa <- networked_taxa | picks$taxa
 
         taxa.in.box <- seq.tsne[,1] > ranges$network_xlim[1] & 
         seq.tsne[,1] < ranges$network_xlim[2] & 
         seq.tsne[,2] > ranges$network_ylim[1] & 
         seq.tsne[,2] < ranges$network_ylim[2]
 
-
         # scale the point and edge sizes
-        network_asize <- unname(proptab[picks$samples,])
-        if(sps>1) network_asize <- colMeans(network_asize) #collapse
-#        network_asize <- 250*sqrt(sqrt(network_asize * 1.8^point.size$network/1000)) # janky sizing
-        network_asize <- 250*(sqrt(network_asize * 1.8^point.size$network/1000)) # janky sizing
+        network_asize <- unname(proptab[picks$samples,,drop=F])
+        if(pss>1) network_asize <- colMeans(network_asize) #collapse
+        network_asize <- net.cex.mult*(sqrt(network_asize * 1.8^point.size$network/net.cex.div)) # janky sizing
         network_asize[network_asize==0] <- NA #don't plot zeros
-        network_asize[!networked_taxa] <- NA #don't plot unnetworked
+#        network_asize[!networked_taxa] <- NA #don't plot unnetworked
         network_asize[!taxa.in.box] <- NA #don't plot if not in box
-    
-        # get the network from the saved graphs file
-        network_save_graph <- save.graphs[[network_cor*100]]
-        # resize the edges
-        network_edgesize <- rescale(E(network_save_graph)$weight,to=c(3,30))
 
-        # plot edges and vertices
-        if(!all(is.na(network_asize))) {
-            plot(network_save_graph, layout=seq.tsne, xlim=ranges$network_xlim, ylim=ranges$network_ylim, vertex.shape="circle", vertex.size=network_asize, vertex.color=color.taxa, vertex.label=NA, vertex.label.cex=1.5, vertex.label.color="black", edge.label=NA, edge.width=network_edgesize, main=NULL, rescale=F, add=T)
-        }
+
+# network edge setup
+
+        # select taxa in requested network space: only plot if SparCC correlation passes threshold
+        network_save_weights <- save.weights[abs(save.weights$corr) > input$network.cor,,drop=F]
+
+
+		# only plot edges if there's something to plot
+		if(nrow(network_save_weights)>0) {
+			# select positive and negative correlations
+			# here we use the reduced network size if sparcc isn't run on n=1
+		
+			networked_esvs <- as.numeric(do.call(rbind,strsplit(x=unique(c(network_save_weights$node1,network_save_weights$node2)),split="_"))[,2])
+			networked_taxa <- 1:num.taxa %in% networked_esvs
+
+			# re-enforce limits and merge here 
+			networked_taxa <- networked_taxa & taxa_mult_samples
+			networked_taxa <- networked_taxa | picks$taxa
+
+			#change weight function
+		
+			network_save_weights$weight <- network_save_weights$corr/max(abs(network_save_weights$corr))
+# 			network_save_weights$color[network_save_weights$corr<0] <- rgb(abs(network_save_weights$weight[network_save_weights$corr<0]),0,0,1)
+# 			network_save_weights$color[network_save_weights$corr>=0] <- rgb(0,0,abs(network_save_weights$weight[network_save_weights$corr>=0]),1)
+			network_save_weights$color[network_save_weights$corr<0] <- rgb(1,0,0,abs(network_save_weights$weight[network_save_weights$corr<0]))
+			network_save_weights$color[network_save_weights$corr>=0] <- rgb(0,0,1,abs(network_save_weights$weight[network_save_weights$corr>=0]))
+
+	#     	network_save_graph$color[network_save_graph$corr<0] <- rgb(abs(network_save_graph$weight[network_save_graph$corr<0]),0,0,abs(network_save_graph$weight[network_save_graph$corr<0]))
+	#     	network_save_graph$color[network_save_graph$corr>=0] <- rgb(0,0,abs(network_save_graph$weight[network_save_graph$corr>=0]),abs(network_save_graph$weight[network_save_graph$corr>=0]))
+
+			# get the network from the saved graphs file
+	#        network_save_graph <- save.graphs[[as.character(input$network.cor*100)]]
+
+			network_save_graph <- graph_from_data_frame(network_save_weights, directed=F)
+
+			# resize the edges
+			network_edgesize <- scales::rescale(E(network_save_graph)$weight,to=c(edge.min,edge.max))
+
+			# add edges and vertices to plot
+			if(!all(is.na(network_asize))) {
+		
+	# old one assumed network_save_graph has all vertices, now it just has those with edges
+	#            plot(network_save_graph, layout=seq.tsne[networked_esvs,], xlim=ranges$network_xlim, ylim=ranges$network_ylim, vertex.shape="circle", vertex.size=network_asize, vertex.color=color.taxa, vertex.label=NA, vertex.label.cex=1.5, vertex.label.color="black", edge.label=NA, edge.width=network_edgesize, main=NULL, rescale=F, add=T)
+				plot(network_save_graph, layout=seq.tsne[networked_esvs,], xlim=ranges$network_xlim, ylim=ranges$network_ylim, vertex.shape="circle", vertex.size=network_asize[networked_esvs], vertex.color=color.taxa[networked_esvs], vertex.label=NA, vertex.label.cex=1.5, vertex.label.color="black", edge.label=NA, edge.width=network_edgesize, main=NULL, rescale=F, add=T)
+			}
+		
+		}
+		
+		# plot vertices
+        points(seq.tsne[picks$taxa,], pch=21, col="black", bg=color.taxa[picks$taxa], cex=network_asize[picks$taxa], xlim=ranges$network_xlim, ylim=ranges$network_ylim, xlab = "", ylab = "")
 
         # add random text annotations if requested
          if(input$plot.all.names > 0 & input$tabs=="network") {
-            shown_taxa <- networked_taxa & taxa.in.box
+            shown_taxa <- taxa.in.box #networked_taxa & 
                 small.sample <- sample(which(shown_taxa),input$plot.all.names, replace=T)
-                if(length(small.sample)>0) text(seq.tsne[small.sample,,drop=F],labels=newnames[small.sample])
+                if(length(small.sample)>0) text(seq.tsne[small.sample,,drop=F],labels=taxa$list[small.sample])
          }
 
         # add specific text annotations if requested 
@@ -692,12 +845,12 @@ server <- function(input, output, session) {
             patterns <- strsplit(x=input$plot.names,split="\n")[[1]]
             for(patt in patterns) {
                 if(patt=="\n") next
-                pick.user.taxa <- grepl(pattern=patt, x=newnames)
-                if(sum(pick.user.taxa)>0) text(seq.tsne[pick.user.taxa,,drop=F],labels=sapply(which(pick.user.taxa), function(x) paste(strsplit(newnames[x],split=";")[[1]][c(6,7)],collapse=" ")))
+                pick.user.taxa <- grepl(pattern=patt, x=taxa$list)
+                if(sum(pick.user.taxa)>0) text(seq.tsne[pick.user.taxa,,drop=F],labels=sapply(which(pick.user.taxa), function(x) paste(strsplit(taxa$names[x],split=";")[[1]][c(6,7)],collapse=" ")))
             }
         }
         print("done network")
-    }, width=700,height=700)
+    }, width=network.px,height=network.px)
 
 
 
@@ -710,6 +863,8 @@ server <- function(input, output, session) {
     ###############
     output$geographic <- renderPlot({
     
+    	h2("Coming Soon!")
+    	
         # set up the map range for ggplot
         range.lat <- input$latitude
         range.lon <- input$longitude
@@ -879,7 +1034,11 @@ print("done geographic")
     ###############
     # environmental plot
     ###############
-    output$environmental <- renderPlot({})
+    output$environmental <- renderPlot({
+    
+    h2("Coming Soon!")
+    
+    })
 
     ###############
     # phylogenetic plot
@@ -891,26 +1050,31 @@ print("done geographic")
         
         #### TAXA FIRST
 
-        taxa.user.regex <- rep(FALSE,tt.cols)
+		#filter for those in network
+
+        taxa.user.regex <- rep(FALSE,num.taxa)
 
         # if user doesn't provide a taxon or a regex, select all
         # print(input$taxon)
         if(input$taxon=="" & input$plot.taxa.regex=="") {
-            taxa.user.regex <- rep(TRUE,tt.cols)
+            taxa.user.regex <- rep(TRUE,num.taxa)
         # else if user provides a lone taxon and no regex, grep it
         } else if (input$taxon!="" & input$plot.taxa.regex=="") {
-            taxa.user.regex <- grepl(x=newnames,pattern=input$taxon)
+            taxa.user.regex <- grepl(x=taxa$names,pattern=input$taxon)
         } else if(input$plot.taxa.regex!="") {
         # if user provides a list of regex, split and search each one, ORing
             patterns <- strsplit(x=input$plot.taxa.regex,split="\n")[[1]]
             for(patt in patterns) {
                 # print(patt)
                 if(patt=="\n") next
-                taxa.user.regex <- taxa.user.regex | grepl(x=newnames, pattern=patt)
+                taxa.user.regex <- taxa.user.regex | grepl(x=taxa$names, pattern=patt)
             }
         } else {
             print("phylogenetic taxa: how did you get here?")
         }
+
+		# only use taxa included in primer
+		taxa.with.primer <- table_list %in% input$primers
 
         # filter by what's shown in taxa box
         taxa.in.box <- seq.tsne[,1] > ranges$network_xlim[1] & 
@@ -923,14 +1087,13 @@ print("done geographic")
 #         picks$taxa <- picks$taxa & taxa_mult_samples #infinite loop?
 
         # enforce slider limits over taxa choices
-        picks$taxa <- taxa.user.regex & taxa_mult_samples & taxa.in.box
-        # print(paste(newnames[picks$taxa],sep="\n"))
+        print(c(length(taxa.user.regex) , length(taxa_mult_samples) , length(taxa.in.box)))
 
-        # print(sum(picks$taxa))
-        ptl <- length(picks$taxa)
+        picks$taxa <- taxa.user.regex & taxa_mult_samples & taxa.in.box & taxa.with.primer
+        # print(paste(taxa$list[picks$taxa],sep="\n"))
 
-        spt <- sum(picks$taxa)
-        if(spt<3) {print("phylogenetic stopped"); plot(0,0,main="not enough sequences",axes = FALSE, xlab = "", ylab = "", pch=""); return(0)} #can't do phylogeny on <3 sequences
+        pts <- sum(picks$taxa)
+        if(pts<3) {print("phylogenetic stopped"); plot(0,0,main="not enough sequences",axes = FALSE, xlab = "", ylab = "", pch=""); return(0)} #can't do phylogeny on <3 sequences
         
 
 
@@ -940,11 +1103,11 @@ print("done geographic")
         min.richness.samples <- rowSums(proptab>0) >= 2^input$min.richness
 
         # initialize 
-        sample.user.regex <- rep(FALSE,tt.rows)
+        sample.user.regex <- rep(FALSE,num.samples)
         # print(input$sample)
         # if user doesn't provide a lone sample or a regex, select all
         if(input$sample=="" & input$plot.sample.regex=="") {
-            sample.user.regex <- rep(TRUE,tt.rows)
+            sample.user.regex <- rep(TRUE,num.samples)
         # if user provides a lone sample and no regex, grep for it
         } else if (input$sample!="" & input$plot.sample.regex=="") {
             sample.user.regex <- metadata$desc==input$sample
@@ -961,6 +1124,20 @@ print("done geographic")
             print("phylogenetic samples: how did you get here?")
         }
 
+		# select subset of samples that have matching primer pairs
+		samples.with.primer <- rep(TRUE, num.samples)
+		if(input$primers.log == "OR") {
+			# only select samples that have ANY user selected primers
+			samples.with.primer <- rowSums(proptab[,table_list %in% input$primers])>0
+		} else if (input$primers.log == "AND") {
+			# only select samples that have ALL user selected primers
+			for(primer in input$primers) {
+				print(primer)
+				samples.with.primer <- samples.with.primer & rowSums(proptab[,table_list %in% primer])>0
+			}
+		} else {
+			print("go away you should not be here!")
+		}
 
         # don't waste time calculating and plotting things that aren't in the view box
         samples.in.box <- sample.tsne.rot[,1] > ranges$biospatial_xlim[1] & 
@@ -971,16 +1148,16 @@ print("done geographic")
         # put all the sample filters together
         # QC and holdup
 
-        picks$samples <- min.reads.samples & min.richness.samples & sample.user.regex & samples.in.box
+        picks$samples <- min.reads.samples & min.richness.samples & sample.user.regex & samples.in.box & samples.with.primer
         # print(paste(metadata$desc[picks$samples],sep="\n"))
-        sps <- sum(picks$samples)
-        if(sps==0) {print("phylogenetic stopped"); return(0)}
+        pss <- sum(picks$samples)
+        if(pss==0) {print("phylogenetic stopped"); return(0)}
 
 
         # keep it small for now
-        if(spt > 100) {
+        if(pts > 60) {
             #want selected taxa in the top 100 in abundance for the selected 
-            seqs.taxa <- rep(FALSE,length(picks$taxa)) # F F F F
+            seqs.taxa <- rep(FALSE,num.taxa) # F F F F
             order.taxa <- order(colSums(proptab[picks$samples,picks$taxa]),decreasing=T) # 3 1 2 4
             seqs.taxa[picks$taxa] <- order.taxa #probably FALSE got converted to zeros
           
@@ -992,6 +1169,8 @@ print("done geographic")
 #             order.max <- max(order.taxa[picks$taxa])         
 #             seqs.taxa[order.taxa <= order.max & picks$taxa] <- TRUE
 #             seqs.taxa[sample(which(picks$taxa),100)] <- TRUE
+            print(paste0(pts-sum(seqs.taxa)," sequences not shown"))
+            
         } else {
             seqs.taxa <- picks$taxa
         }
@@ -1021,13 +1200,19 @@ print("done geographic")
         #assign taxonomic labels
         user.levels <- input$tax.levels
         print(user.levels)
+		print(colnames(taxout[[input$ref]]))
         if(length(user.levels)==0) { 
-            sub.tree$tip.label <- paste0("ESV_",which(seqs.taxa)) 
+            sub.tree$tip.label <- paste0("ESV_",which(seqs.taxa))
         } else {
-            user.taxlevels <- unname(taxout$ref_dada2_silva_nr_v132_train_set.fasta$tax[colnames(proptab)[seqs.taxa],user.levels])
+            user.taxlevels <- unname(taxout[[input$ref]][colnames(proptab)[seqs.taxa],user.levels])
             user.taxlevels <- cbind(user.taxlevels,paste0("ESV_",which(seqs.taxa)))
             sub.tree$tip.label <- apply(user.taxlevels,1,paste,collapse=";")
         }
+        
+        if(input$tax.boots) {
+        	sub.tree$tip.label <- paste0(sub.tree$tip.label," (",bootout[[input$ref]][colnames(proptab)[seqs.taxa],user.levels[length(user.levels)]],")")        
+        }
+
 #         sub.physeq <- subset_taxa(seqs.physeq, seqs.taxa)
 #         sub.physeq <- subset_samples(sub.physeq, picks$samples)
 #         sub.otu <- otu_table(t(proptab[,seqs.taxa]), taxa_are_rows = TRUE)
@@ -1035,7 +1220,7 @@ print("done geographic")
 #         sub.physeq <- phyloseq(sub.otu, sub.tax, sub.tree)
     
         #scale to relative abundances
-        if(sps>1) {
+        if(pss>1) {
             sub.edge.weight <- unname(colSums(proptab[picks$samples,seqs.taxa,drop=F]))
         } else {
             sub.edge.weight <- unname(proptab[picks$samples,seqs.taxa,drop=F])
@@ -1053,7 +1238,7 @@ print("done geographic")
                 sub.node.weight[tt] <- sub.node.weight[tt] + sub.edge.weight[tip]
             }
         }
-        sub.node.weight <- rescale(sqrt(sqrt(sub.node.weight)),to=c(1,10))
+        sub.node.weight <- scales::rescale(sqrt(sqrt(sub.node.weight)),to=c(1,10))
 #        sub.node.weight <- sub.node.weight[match(1:length(sub.node.weight),sub.tree$edge[,1])]
         # new distance matrix from branch lengths
         sub.dist.tree <- cophenetic.phylo(sub.tree)
@@ -1080,15 +1265,18 @@ print("done geographic")
         # if colors for any member of this set of taxa are not set, and no rotation is requested, make default colors
         if(any(is.na(color$phylo[seqs.taxa])) | all(input$tree.colors==0)) {
             sub.colors <- cbind(sub.tsne[,1],sub.tsne[,2],sub.tsne[,3])
-            sub.colors.rot <- rgb(rescale(sub.colors,to=c(0,0.8)))
+            sub.colors.rot <- rgb(scales::rescale(sub.colors,to=c(0,0.8)))
 
 #             print("default colors")
 
+        # allow reset to default colors
+        
         # else use rotated color
+
         } else if (any(input$tree.colors!=0)) {
             sub.colors <- cbind(sub.tsne[,1],sub.tsne[,2],sub.tsne[,3])
             sub.colors.rot <- cbind(Rotation(sub.colors[,1:2],input$tree.colors[1]),Rotation(sub.colors[,c(2,3)],input$tree.colors[2]))
-            sub.colors.rot <- rgb(rescale(sub.colors.rot,to=c(0,0.8)))
+            sub.colors.rot <- rgb(scales::rescale(sub.colors.rot,to=c(0,0.8)))
 #             print("new colors")
         }
 
@@ -1107,13 +1295,17 @@ print("done geographic")
        isolate({last$seqs <- picks$taxa})
 
         print("done phylogenetic")
-    }, width=700, height=900)
+    }, width=1000, height=900)
 
 
     ###############
     # functional plot
     ###############
-    output$functional <- renderPlot({})
+    output$functional <- renderPlot({
+    
+    h2("Coming Soon!")
+    
+    })
 
     ###############
     # taxa table
@@ -1130,11 +1322,11 @@ print("done geographic")
                 sample.sum <- sum(unname(seqtab[xy,,drop=F]))
                 rhtable.num <- round(1000*sample.count/sample.sum,1)[order(sample.count,decreasing=T)] #bc of sprintf
                 rhtable.ppt <- sprintf('%.2f',rhtable.num)
-                rhtable.taxa <- newnames[picks$taxa][order(sample.count,decreasing=T)]
+                rhtable.taxa <- taxa$names[picks$taxa][order(sample.count,decreasing=T)]
                   data.frame(
                     cbind(
                         "per mille"=rhtable.ppt[rhtable.num>0],                  
-                        "taxa"=rhtable.taxa[rhtable.num>0]
+                        "taxon"=rhtable.taxa[rhtable.num>0]
                         )
                     )
             }
@@ -1144,79 +1336,80 @@ print("done geographic")
             xy <- xy_network(input$network_hover) #gives closest point
             if(is.null(xy)) return()
             if(picks$taxa[xy]) {
-                taxa.count <- unname(proptab[picks$samples,xy,drop=F]) #raw reads of taxon in selected samples
-                taxa.sums <- rowSums(unname(proptab[picks$samples,,drop=F])) #raw reads of all taxa in selected samples
-                rhtable.num <- round(taxa.count/1000,1)[order(taxa.count,decreasing=T)] #bc of sprintf
+                taxa.count <- unname(proptab[picks$samples,xy,drop=F]) #proportional reads of taxon in selected samples
+            	taxa.order <- order(taxa.count,decreasing=T)
+                # taxa.sums <- rowSums(unname(proptab[picks$samples,,drop=F])) #proportional reads of all taxa in selected samples
+                rhtable.num <- round(taxa.count*1000,1)[taxa.order] #bc of sprintf
                 rhtable.ppt <- sprintf('%.2f',rhtable.num)
-                rhtable.taxa <- metadata$desc[picks$samples][order(taxa.count,decreasing=T)]
+                rhtable.taxa <- metadata$desc[picks$samples][taxa.order]
                   data.frame(
                     cbind(
                         "per mille"=rhtable.ppt[rhtable.num>0],                  
-                        "samples"=rhtable.taxa[rhtable.num>0]
+                        "sample"=rhtable.taxa[rhtable.num>0]
                         )
                     )
             }
         } else {
             print("nothing to see here")
-            data.frame()
+#            data.frame()
         }
       }, align='rl',digits=2)
 
-
-
-    ###############
-    # overunder table
-    ###############
-
-      output$overunder <- renderTable({
-        if(input$tabs == "biospatial") {
-            #we want a table of over and underrepresented taxa in the sample being hovered over
-
-            xy <- xy_biospatial(input$biospatial_hover)
-            # if not hovering, then table is for whole viewport
-            if(is.null(xy)) {
-                
-            
-            } else {
-            # if hovering then table is just for that sample
-                if(picks$samples[xy]) {
-                    sample.count <- unname(seqtab[xy,picks$taxa,drop=F])
-                    sample.sum <- sum(unname(seqtab[xy,,drop=F]))
-                    overunder.num <- round(1000*sample.count/sample.sum,1)[order(sample.count,decreasing=T)] #bc of sprintf
-                    overunder.ppt <- sprintf('%.2f',overunder.num)
-                    overunder.taxa <- newnames[picks$taxa][order(sample.count,decreasing=T)]
-                      data.frame(
-                        cbind(
-                            "per mille"=overunder.ppt[overunder.num>0],                  
-                            "taxa"=overunder.taxa[overunder.num>0]
-                            )
-                        )
-                }
-            }
-        } else if(input$tabs == "network") {
-            # we want a table of samples which have enriched abundances of the taxa in the FOV
-            xy <- xy_network(input$network_hover) #gives closest point
-            if(is.null(xy)) return()
-            if(picks$taxa[xy]) {
-                taxa.count <- unname(proptab[picks$samples,xy,drop=F]) #raw reads of taxon in selected samples
-                taxa.sums <- rowSums(unname(proptab[picks$samples,,drop=F])) #raw reads of all taxa in selected samples
-                overunder.num <- round(taxa.count/1000,1)[order(taxa.count,decreasing=T)] #bc of sprintf
-                overunder.ppt <- sprintf('%.2f',overunder.num)
-                overunder.taxa <- metadata$desc[picks$samples][order(taxa.count,decreasing=T)]
-                  data.frame(
-                    cbind(
-                        "per mille"=overunder.ppt[overunder.num>0],                  
-                        "samples"=overunder.taxa[overunder.num>0]
-                        )
-                    )
-            }
-        } else {
-            print("nothing to see here")
-            data.frame()
-        }
-      }, align='rl',digits=2)
-    
-    
+# 
+# 
+#     ###############
+#     # overunder table
+#     ###############
+# 
+#       output$overunder <- renderTable({
+#         if(input$tabs == "biospatial") {
+#             #we want a table of over and underrepresented taxa in the sample being hovered over
+# 
+#             xy <- xy_biospatial(input$biospatial_hover)
+#             # if not hovering, then table is for whole viewport
+#             if(is.null(xy)) {
+#                 
+#             
+#             } else {
+#             # if hovering then table is just for that sample
+#                 if(picks$samples[xy]) {
+#                     sample.count <- unname(seqtab[xy,picks$taxa,drop=F])
+#                     sample.sum <- sum(unname(seqtab[xy,,drop=F]))
+#                     overunder.num <- round(1000*sample.count/sample.sum,1)[order(sample.count,decreasing=T)] #bc of sprintf
+#                     overunder.ppt <- sprintf('%.2f',overunder.num)
+#                     overunder.taxa <- taxa$list[picks$taxa][order(sample.count,decreasing=T)]
+#                       data.frame(
+#                         cbind(
+#                             "per mille"=overunder.ppt[overunder.num>0],                  
+#                             "taxa"=overunder.taxa[overunder.num>0]
+#                             )
+#                         )
+#                 }
+#             }
+#         } else if(input$tabs == "network") {
+#             # we want a table of samples which have enriched abundances of the taxa in the FOV
+#             xy <- xy_network(input$network_hover) #gives closest point
+#             if(is.null(xy)) return()
+#             if(picks$taxa[xy]) {
+#                 taxa.count <- unname(proptab[picks$samples,xy,drop=F]) #raw reads of taxon in selected samples
+#                 taxa.sums <- rowSums(unname(proptab[picks$samples,,drop=F])) #raw reads of all taxa in selected samples
+#                 overunder.num <- round(taxa.count/1000,1)[order(taxa.count,decreasing=T)] #bc of sprintf
+#                 overunder.ppt <- sprintf('%.2f',overunder.num)
+#                 overunder.taxa <- metadata$desc[picks$samples][order(taxa.count,decreasing=T)]
+#                   data.frame(
+#                     cbind(
+#                         "per mille"=overunder.ppt[overunder.num>0],                  
+#                         "samples"=overunder.taxa[overunder.num>0]
+#                         )
+#                     )
+#             }
+#         } else {
+#             print("nothing to see here")
+#             data.frame()
+#         }
+#       }, align='rl',digits=2)
+#     
+#     
 
 
 }
@@ -1228,7 +1421,6 @@ shinyApp(ui = ui, server = server)
 
 #network
 # do this once outside of shiny app and import it
-
 
 # can this be vastly simplified by just saving vectors of weights and colors instead of the whole graph?
 #network_correlations <- props.sparcc$Cor #does it make sense to try to choose networked taxa here?
@@ -1279,10 +1471,10 @@ shinyApp(ui = ui, server = server)
 #         min.richness.samples <- rowSums(proptab>0) > 2^input$min.richness
 # 
 #         sample.user.regex <- metadata$desc==input$sample
-# #        sample.user.regex <- rep(FALSE,tt.rows)
+# #        sample.user.regex <- rep(FALSE,num.samples)
 # 
 #         if(input$sample=="") {
-#             sample.user.regex <- rep(TRUE,tt.rows)
+#             sample.user.regex <- rep(TRUE,num.samples)
 #         } else {
 #         sample.user.regex <- metadata$desc==input$sample
 # 
@@ -1298,7 +1490,7 @@ shinyApp(ui = ui, server = server)
 # 
 # 
 #         picks$samples <- min.reads.samples & min.richness.samples & sample.user.regex
-#         sps <- sum(picks$samples)
+#         pss <- sum(picks$samples)
 #         
 #         
 
@@ -1307,18 +1499,18 @@ shinyApp(ui = ui, server = server)
 #     #choose networked taxa to plot
 #     taxon <- input$taxon
 #     
-#     picks$taxa <- rep(FALSE,tt.cols)
-#     taxa.user.regex <- rep(FALSE,tt.cols)
+#     picks$taxa <- rep(FALSE,num.taxa)
+#     taxa.user.regex <- rep(FALSE,num.taxa)
 #     if(input$plot.taxa.regex != "") {
 #         patterns <- strsplit(x=input$plot.taxa.regex,split="\n")[[1]]
 #         for(patt in patterns) {
 #             # print(patt)
 #             if(patt=="\n") next
-#             taxa.user.regex <- taxa.user.regex | grepl(x=newnames, pattern=patt)
+#             taxa.user.regex <- taxa.user.regex | grepl(x=taxa$list, pattern=patt)
 #         }
 #         picks$taxa <- taxa.user.regex #logical
 #     } else {
-#         picks$taxa <- grepl(pattern=taxon,x=newnames,fixed=T) #logical
+#         picks$taxa <- grepl(pattern=taxon,x=taxa$list,fixed=T) #logical
 #     }
 #     
 
