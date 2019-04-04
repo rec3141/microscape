@@ -5,7 +5,12 @@ You can try out the R Shiny app at https://cryomics.shinyapps.io/microscape/
 
 If you get a 503 Error try hitting refresh a couple of times
 
-But it will be much faster if you install it yourself locally, and you can use your own data! It is not currently nicely packaged, you have to just download the scripts from github.
+![Microscape Samples](microscape-samples.png)
+![Microscape Taxa](microscape-taxa.png)
+![Microscape Phylogeny](microscape-phylogeny.png)
+
+
+Unfortunately Microscape is not nicely packaged at the moment, just download the scripts from github.
 
 This program uses DADA2 as the workhorse: https://benjjneb.github.io/dada2/
 
