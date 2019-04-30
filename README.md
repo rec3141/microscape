@@ -3,7 +3,7 @@ Visualizing Microbial Landscapes
 
 You can try out the R Shiny app at https://cryomics.shinyapps.io/microscape/
 
-If you get a 503 Error try hitting refresh a couple of times
+If you get a 503 Error it means that the server is booting up the virtual machine, try waiting one minute and trying again
 
 ![Microscape Samples](microscape-samples.png)
 ![Microscape Taxa](microscape-taxa.png)
