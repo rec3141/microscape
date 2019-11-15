@@ -1,7 +1,7 @@
 # Microscape: An Interactive Web Application for Microbiome Analysis
 Visualizing Microbial Landscapes
 
-You can try out the R Shiny app at https://cryomics.shinyapps.io/microscape/
+You can try out the R Shiny app at https://cryomic.org/microscape
 
 If you get a 503 Error it means that the server is booting up the virtual machine, try waiting one minute and trying again
 
