@@ -1,0 +1,10 @@
+name: microscape-network
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.3
+  - r-data.table
+  - r-spieceasi
+  - r-matrix
+  - r-igraph

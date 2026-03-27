@@ -65,6 +65,13 @@ def helpMessage() {
                            "name:path:Level1,Level2,..." [default: none]
       --run_phylogeny      Build phylogenetic tree [default: false]
 
+    Metadata:
+      --metadata PATH      MIMARKS-compliant TSV/CSV metadata file [default: none]
+      --sample_id_column S Column name matching sample IDs [default: sample_name]
+
+    Network:
+      --min_prevalence N   Min samples per ASV for SparCC [default: 5]
+
     Resources:
       --threads N          General thread count [default: 8]
       --dada_cpus N        CPUs for DADA2 processes [default: 8]
@@ -109,6 +116,12 @@ include { FILTER_SEQTAB }     from './modules/merge'
 include { ASSIGN_TAXONOMY }   from './modules/taxonomy'
 include { BUILD_PHYLOGENY }   from './modules/phylogeny'
 include { RENORMALIZE }       from './modules/renormalize'
+
+// Stage C: Metadata, clustering, network, visualization
+include { LOAD_METADATA }     from './modules/metadata'
+include { CLUSTER_TSNE }      from './modules/cluster'
+include { NETWORK_SPARCC }    from './modules/network'
+include { BUILD_SHINY }       from './modules/shiny'
 
 // ============================================================================
 // Main workflow
@@ -227,6 +240,45 @@ workflow {
     // 7. Build phylogeny (optional)
     if (params.run_phylogeny) {
         BUILD_PHYLOGENY(FILTER_SEQTAB.out.seqtab)
+    }
+
+    // ======================================================================
+    // Stage C: Metadata, clustering, network, visualization
+    // ======================================================================
+
+    // 8. Load metadata (optional — if metadata file provided)
+    if (params.metadata) {
+        LOAD_METADATA(FILTER_SEQTAB.out.seqtab,
+                      file(params.metadata),
+                      params.sample_id_column)
+        ch_metadata = LOAD_METADATA.out.metadata
+    } else {
+        ch_metadata = Channel.empty()
+    }
+
+    // 10. t-SNE clustering (samples + ASVs)
+    CLUSTER_TSNE(FILTER_SEQTAB.out.seqtab)
+
+    // 11. SparCC network analysis (requires renormalized data)
+    if (params.ref_databases) {
+        NETWORK_SPARCC(RENORMALIZE.out.merged, params.min_prevalence)
+
+        // 12. Build Shiny app (bundle all outputs)
+        //     Collect all taxonomy files into a directory
+        ch_tax_files = ASSIGN_TAXONOMY.out.taxonomy
+            .map { db_name, tax, boot -> [tax, boot] }
+            .flatten()
+            .collect()
+
+        BUILD_SHINY(
+            FILTER_SEQTAB.out.seqtab,
+            RENORMALIZE.out.merged,
+            ch_tax_files,
+            ch_metadata.ifEmpty(file('NO_METADATA')),
+            CLUSTER_TSNE.out.sample_tsne,
+            CLUSTER_TSNE.out.seq_tsne,
+            NETWORK_SPARCC.out.correlations
+        )
     }
 }
 

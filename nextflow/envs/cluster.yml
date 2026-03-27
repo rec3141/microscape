@@ -1,0 +1,10 @@
+name: microscape-cluster
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.3
+  - r-data.table
+  - r-rtsne
+  - r-gmodels
+  - r-paralleldist
