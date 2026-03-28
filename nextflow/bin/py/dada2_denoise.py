@@ -268,12 +268,20 @@ for i, sample_name in enumerate(sample_names):
     derepR = dada2gpu.derep_fastq(rev_files[i])
 
     # Denoise: apply error model to distinguish real variants from errors
-    ddF = dada2gpu.dada(derepF, err=errF)
-    ddR = dada2gpu.dada(derepR, err=errR)
+    try:
+        ddF = dada2gpu.dada(derepF, err=errF)
+        ddR = dada2gpu.dada(derepR, err=errR)
+    except Exception as e:
+        print(f"[WARNING] {sample_name}: dada() failed: {e}")
+        continue
 
-    # Merge paired ends
-    fwd_denoised = ddF["denoised"]  # {seq: abundance}
-    rev_denoised = ddR["denoised"]  # {seq: abundance}
+    # Extract denoised sequences (may be missing if sample is too small)
+    fwd_denoised = ddF.get("denoised", {})
+    rev_denoised = ddR.get("denoised", {})
+
+    if not fwd_denoised or not rev_denoised:
+        print(f"[WARNING] {sample_name}: no denoised sequences, skipping")
+        continue
 
     merged = merge_pairs(fwd_denoised, rev_denoised, min_ov=min_overlap)
 
