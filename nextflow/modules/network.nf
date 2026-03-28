@@ -1,25 +1,29 @@
-// SparCC co-occurrence network analysis.
-//
-// Runs SparCC (Sparse Correlations for Compositional data) on the
-// normalized count table to infer microbial co-occurrence networks.
-// Low-prevalence ASVs are filtered out to reduce noise and computation.
+// SparCC / CLR co-occurrence network analysis.
+// R uses SpiecEasi::sparcc(); Python uses CLR + Pearson correlation.
+
+def netExt() { return params.lang == 'python' ? 'pkl' : 'rds' }
 
 process NETWORK_SPARCC {
     tag "sparcc"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-r"
+    conda params.lang == 'python' ? "${projectDir}/conda-envs/microscape-python" : "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/network", mode: 'copy'
 
     input:
-    path(renorm_merged_rds)
+    path(renorm_merged)
     val(min_prevalence)
 
     output:
-    path("sparcc_correlations.rds"), emit: correlations
+    path("sparcc_correlations.${netExt()}"), emit: correlations
     path("sparcc_stats.tsv"), emit: stats
 
     script:
+    if (params.lang == 'python')
     """
-    network_sparcc.R "${renorm_merged_rds}" ${min_prevalence} ${task.cpus}
+    network_sparcc.py "${renorm_merged}" ${min_prevalence} ${task.cpus}
+    """
+    else
+    """
+    network_sparcc.R "${renorm_merged}" ${min_prevalence} ${task.cpus}
     """
 }

@@ -200,14 +200,18 @@ with open("seqtab_orphans.pkl", "wb") as f:
 with open("seqtab_small.pkl", "wb") as f:
     pickle.dump(dt_small, f)
 
-# Wide CSV for compatibility
+# Wide matrix for compatibility
 print("[INFO] Casting final table to wide matrix...")
 if len(dt) > 0:
     wide = dt.pivot_table(index="sample", columns="sequence",
                            values="count", fill_value=0, aggfunc="sum")
     wide.to_csv("seqtab_final_wide.csv")
+    with open("seqtab_final_wide.pkl", "wb") as f:
+        pickle.dump(wide, f)
 else:
     pd.DataFrame().to_csv("seqtab_final_wide.csv")
+    with open("seqtab_final_wide.pkl", "wb") as f:
+        pickle.dump(pd.DataFrame(), f)
 
 # Stats
 stats = pd.DataFrame([

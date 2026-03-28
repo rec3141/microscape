@@ -1,26 +1,30 @@
 // t-SNE ordination of samples and ASVs via Bray-Curtis distances.
-//
-// Computes Bray-Curtis distance matrices for both samples and ASVs from
-// the proportional abundance table, then reduces dimensionality with
-// PCA followed by t-SNE for visualization.
+// Supports --lang R (parallelDist + Rtsne) or --lang python (scipy + sklearn).
+
+def clusterExt() { return params.lang == 'python' ? 'pkl' : 'rds' }
 
 process CLUSTER_TSNE {
     tag "tsne"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-r"
+    conda params.lang == 'python' ? "${projectDir}/conda-envs/microscape-python" : "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/clustering", mode: 'copy'
 
     input:
-    path(seqtab_rds)
+    path(seqtab)
 
     output:
-    path("sample_bray_tsne.rds"), emit: sample_tsne
-    path("seq_bray_tsne.rds"), emit: seq_tsne
-    path("sample_bray_dist.rds"), emit: sample_dist
-    path("seq_bray_dist.rds"), emit: seq_dist
+    path("sample_bray_tsne.${clusterExt()}"), emit: sample_tsne
+    path("seq_bray_tsne.${clusterExt()}"), emit: seq_tsne
+    path("sample_bray_dist.${clusterExt()}"), emit: sample_dist
+    path("seq_bray_dist.${clusterExt()}"), emit: seq_dist
 
     script:
+    if (params.lang == 'python')
     """
-    cluster_tsne.R "${seqtab_rds}" ${task.cpus}
+    cluster_tsne.py "${seqtab}" ${task.cpus}
+    """
+    else
+    """
+    cluster_tsne.R "${seqtab}" ${task.cpus}
     """
 }
