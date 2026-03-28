@@ -7,7 +7,7 @@
 process NETWORK_SPARCC {
     tag "sparcc"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-network"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/network", mode: 'copy'
 
     input:

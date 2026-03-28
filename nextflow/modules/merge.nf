@@ -15,7 +15,7 @@
 process MERGE_SEQTABS {
     tag "merge-all"
     label 'process_medium'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
 
     input:
     path(seqtab_files)
@@ -36,7 +36,7 @@ process MERGE_SEQTABS {
 process REMOVE_CHIMERAS {
     tag "chimera-removal"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
 
     input:
     path(seqtab_rds)
@@ -56,7 +56,7 @@ process REMOVE_CHIMERAS {
 process FILTER_SEQTAB {
     tag "filter-qc"
     label 'process_medium'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/seqtab_final", mode: 'copy'
 
     input:

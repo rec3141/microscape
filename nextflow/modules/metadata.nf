@@ -7,7 +7,7 @@
 process LOAD_METADATA {
     tag "metadata"
     label 'process_low'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
 
     input:
     path(seqtab_rds)

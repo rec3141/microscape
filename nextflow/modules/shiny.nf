@@ -7,7 +7,7 @@
 process BUILD_SHINY {
     tag "build_shiny"
     label 'process_low'
-    conda "${projectDir}/conda-envs/microscape-shiny"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/shiny", mode: 'copy'
 
     input:

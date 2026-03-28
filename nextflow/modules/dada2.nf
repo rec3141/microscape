@@ -13,7 +13,7 @@
 process DADA2_FILTER_TRIM {
     tag "${meta.id}"
     label 'process_low'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/filtered", mode: 'copy', pattern: "*_filt_stats.tsv", enabled: !params.store_dir
 
     input:
@@ -38,7 +38,7 @@ process DADA2_FILTER_TRIM {
 process DADA2_LEARN_ERRORS {
     tag "${meta.id}"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/error_models", mode: 'copy', enabled: !params.store_dir
     storeDir params.store_dir ? "${params.store_dir}/error_models" : null
 
@@ -60,7 +60,7 @@ process DADA2_LEARN_ERRORS {
 process DADA2_DENOISE {
     tag "${meta.id}"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/seqtabs", mode: 'copy', enabled: !params.store_dir
     storeDir params.store_dir ? "${params.store_dir}/seqtabs" : null
 

@@ -7,7 +7,7 @@
 process CLUSTER_TSNE {
     tag "tsne"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-cluster"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/clustering", mode: 'copy'
 
     input:

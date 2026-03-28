@@ -7,7 +7,7 @@
 process REMOVE_PRIMERS {
     tag "${meta.id}"
     label 'process_medium'
-    conda "${projectDir}/conda-envs/microscape-cutadapt"
+    conda "${projectDir}/conda-envs/microscape-python"
     publishDir "${params.outdir}/trimmed", mode: 'copy', enabled: !params.store_dir
     storeDir params.store_dir ? "${params.store_dir}/trimmed" : null
 

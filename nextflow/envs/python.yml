@@ -1,8 +1,9 @@
-name: microscape-demux
+name: microscape-python
 channels:
   - conda-forge
   - bioconda
 dependencies:
   - python=3.11
+  - cutadapt=4.9
   - biopython
   - pigz

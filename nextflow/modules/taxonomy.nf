@@ -10,7 +10,7 @@
 process ASSIGN_TAXONOMY {
     tag "${db_name}"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/taxonomy", mode: 'copy'
     storeDir params.store_dir ? "${params.store_dir}/taxonomy" : null
 

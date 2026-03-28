@@ -1,0 +1,32 @@
+name: microscape-r
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  # Core
+  - r-base=4.3
+  - r-data.table
+  - r-ggplot2
+  - r-tidyr
+  # DADA2
+  - bioconductor-dada2=1.30
+  - bioconductor-shortread=1.60
+  # Phylogeny
+  - bioconductor-decipher
+  - bioconductor-biostrings
+  - r-ape
+  # Clustering
+  - r-rtsne
+  - r-paralleldist
+  - r-gmodels
+  # Network
+  - r-igraph
+  - r-matrix
+  # Shiny
+  - r-shiny
+  - r-plotly
+  - r-dt
+  - r-htmlwidgets
+  # SpiecEasi not in conda — install after env creation
+  # R -e "devtools::install_github('zdk123/SpiecEasi')"
+  - r-devtools

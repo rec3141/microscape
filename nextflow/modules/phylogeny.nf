@@ -10,7 +10,7 @@
 process BUILD_PHYLOGENY {
     tag "phylogeny"
     label 'process_high'
-    conda "${projectDir}/conda-envs/microscape-phylo"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/phylogeny", mode: 'copy'
     storeDir params.store_dir ? "${params.store_dir}/phylogeny" : null
 

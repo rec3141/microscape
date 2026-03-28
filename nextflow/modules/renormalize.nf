@@ -12,7 +12,7 @@
 process RENORMALIZE {
     tag "renormalize"
     label 'process_medium'
-    conda "${projectDir}/conda-envs/microscape-dada2"
+    conda "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/renormalized", mode: 'copy'
 
     input:
