@@ -49,13 +49,18 @@ fwd_files = sorted(glob.glob("*_R1.filt.fastq.gz"))
 rev_files = sorted(glob.glob("*_R2.filt.fastq.gz"))
 
 # Drop any empty or missing files (can happen when all reads are filtered out)
-def filter_valid(files, min_size=20):
-    """Keep only files that exist and are larger than min_size bytes."""
+def filter_valid(files, min_size=100):
+    """Keep only files that exist and are larger than min_size bytes.
+    A gzip file with zero reads is still ~20 bytes (header only), so
+    we use 100 as threshold to skip truly empty files."""
     valid = []
     for f in files:
         try:
-            if os.path.getsize(f) > min_size:
+            sz = os.path.getsize(f)
+            if sz > min_size:
                 valid.append(f)
+            else:
+                print(f"[WARNING] Skipping empty file: {f} ({sz} bytes)")
         except OSError:
             pass
     return valid

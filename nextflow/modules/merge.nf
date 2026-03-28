@@ -48,7 +48,7 @@ process REMOVE_CHIMERAS {
     script:
     if (params.lang == 'python')
     """
-    PYTHONPATH=${params.dada2gpu_path}:\$PYTHONPATH \
+    PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
     remove_chimeras.py "${seqtab}" ${task.cpus}
     """
     else

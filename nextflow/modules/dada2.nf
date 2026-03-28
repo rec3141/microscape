@@ -27,7 +27,7 @@ process DADA2_FILTER_TRIM {
     script:
     if (params.lang == 'python')
     """
-    PYTHONPATH=${params.dada2gpu_path}:\$PYTHONPATH \
+    PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
     dada2_filter_trim.py \
         "${meta.id}" "${r1}" "${r2}" \
         ${params.maxEE} ${params.truncQ} ${params.maxN} \
@@ -62,7 +62,7 @@ process DADA2_LEARN_ERRORS {
     script:
     if (params.lang == 'python')
     """
-    PYTHONPATH=${params.dada2gpu_path}:\$PYTHONPATH \
+    PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
     dada2_learn_errors.py "${meta.id}" ${task.cpus}
     """
     else
@@ -89,7 +89,7 @@ process DADA2_DENOISE {
     script:
     if (params.lang == 'python')
     """
-    PYTHONPATH=${params.dada2gpu_path}:\$PYTHONPATH \
+    PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
     dada2_denoise.py \
         "${meta.id}" "${errF}" "${errR}" \
         ${params.min_overlap} ${task.cpus}
