@@ -1,9 +1,30 @@
-dada2_upstream/
-.nextflow*
-nextflow/.nextflow*
+# Pipeline runtime
 nextflow/work/
 nextflow/conda-envs/
+nextflow/.nextflow*/
+.nextflow*
+
+# Test data and results
 test_data/
 test_results*/
+
+# External repos (live in their own repos)
+dada2_gpu/
+dada2_upstream/
+
+# Build artifacts
 *.log
+*.so
+*.o
 __pycache__/
+*.pyc
+nextflow/viz/node_modules/
+nextflow/viz/dist/
+nextflow/viz/.vite/
+
+# Old scripts (superseded by nextflow/bin/)
+microscape-s*.r
+microscape-s*.R
+microscape-s*.sh
+primers-*.fa
+nextflow/viz/public/data/

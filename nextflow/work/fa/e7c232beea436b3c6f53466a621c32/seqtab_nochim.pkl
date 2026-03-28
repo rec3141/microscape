@@ -1,1 +1,0 @@
-/data/microscape_v2/nextflow/work/ab/87d5e778a9024deb4540dd1f877050/seqtab_nochim.pkl

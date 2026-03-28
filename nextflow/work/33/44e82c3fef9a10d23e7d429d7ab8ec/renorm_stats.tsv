@@ -1,5 +1,0 @@
-group	n_asvs	n_samples	total_reads	mean_reads_per_sample	median_reads_per_sample
-chloroplast	3	16	10364	647.8	346.0
-eukaryote	5	9	599	66.6	32.0
-mitochondria	4	11	474	43.1	33.0
-prokaryote	30	53	34074	642.9	408.0

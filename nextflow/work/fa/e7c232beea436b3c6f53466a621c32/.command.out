@@ -1,6 +1,0 @@
-[INFO] Input: 62 samples, 85 ASVs, 48304 reads
-[INFO] Removed 43 orphan ASVs (present in < 2 samples)
-[INFO] Removed 0 rare ASVs (< 3 total reads)
-[INFO] Removed 5 samples (< 100 reads)
-[INFO] Final: 57 samples, 42 ASVs, 45511 reads ( 94.2 % of input)
-[INFO] Casting final table to wide matrix...
