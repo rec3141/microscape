@@ -1,0 +1,9 @@
+dada2_upstream/
+.nextflow*
+nextflow/.nextflow*
+nextflow/work/
+nextflow/conda-envs/
+test_data/
+test_results*/
+*.log
+__pycache__/
