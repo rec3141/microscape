@@ -4,7 +4,7 @@
   import SampleView from './views/SampleView.svelte';
   import NetworkView from './views/NetworkView.svelte';
   import TablesView from './views/TablesView.svelte';
-  import { loadData, loading, error } from './stores/data.svelte.js';
+  import { store, loadData } from './stores/data.svelte.js';
 
   let activeTab = $state('samples');
 
@@ -27,17 +27,17 @@
   <NavBar {activeTab} />
 
   <main class="flex-1 overflow-hidden">
-    {#if loading}
+    {#if store.loading}
       <div class="flex h-full items-center justify-center">
         <div class="text-center">
           <div class="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-blue-500 border-t-transparent mx-auto"></div>
           <p class="text-sm text-slate-400">Loading data...</p>
         </div>
       </div>
-    {:else if error}
+    {:else if store.error}
       <div class="flex h-full items-center justify-center">
         <div class="rounded-lg border border-red-800 bg-red-950/50 p-6 text-center">
-          <p class="text-red-400">{error}</p>
+          <p class="text-red-400">{store.error}</p>
           <button
             class="mt-3 rounded bg-red-800 px-4 py-1.5 text-sm text-red-100 hover:bg-red-700"
             onclick={() => loadData()}

@@ -2,8 +2,7 @@
   import { onMount } from 'svelte';
   import createScatterplot from 'regl-scatterplot';
   import {
-    samples, asvs, counts,
-    selectedSample, setSelectedSample, countsBySample,
+    store, countsBySample,
     GROUP_COLORS, GROUP_HEX,
   } from '../stores/data.svelte.js';
 
@@ -26,12 +25,12 @@
 
   // ── Derived data ──────────────────────────────────────────────────────────
 
-  /** Filtered samples by min read depth */
+  /** Filtered store.samples by min read depth */
   let filteredSamples = $derived(
-    samples.filter(s => (s.reads ?? 0) >= minReads)
+    store.samples.filter(s => (s.reads ?? 0) >= minReads)
   );
 
-  /** Precompute counts-by-sample map */
+  /** Precompute store.counts-by-sample map */
   let cMap = $derived(countsBySample());
 
   /** Regex for taxonomy filtering (case-insensitive) */
@@ -42,18 +41,18 @@
 
   /** Build overlay points: per-sample taxa scatter */
   let overlayPoints = $derived.by(() => {
-    if (!showOverlay || filteredSamples.length === 0 || asvs.length === 0) return [];
+    if (!showOverlay || filteredSamples.length === 0 || store.asvs.length === 0) return [];
 
     const re = taxonRe();
     const pts = [];
 
     for (const sample of filteredSamples) {
-      const sIdx = samples.indexOf(sample);
+      const sIdx = store.samples.indexOf(sample);
       const entries = cMap.get(sIdx) ?? [];
       const totalCount = entries.reduce((s, e) => s + e.count, 0) || 1;
 
       for (const { asv_idx, count } of entries) {
-        const asv = asvs[asv_idx];
+        const asv = store.asvs[asv_idx];
         if (!asv) continue;
 
         const group = asv.group ?? 'prokaryote';
@@ -78,12 +77,12 @@
 
   // ── Top taxa for selected sample ──────────────────────────────────────────
   let topTaxa = $derived.by(() => {
-    if (selectedSample == null) return [];
-    const entries = cMap.get(selectedSample) ?? [];
+    if (store.selectedSample == null) return [];
+    const entries = cMap.get(store.selectedSample) ?? [];
     const total = entries.reduce((s, e) => s + e.count, 0) || 1;
     return entries
       .map(e => ({
-        asv: asvs[e.asv_idx],
+        asv: store.asvs[e.asv_idx],
         count: e.count,
         pct: ((e.count / total) * 100).toFixed(1),
       }))
@@ -93,7 +92,7 @@
   });
 
   let selectedSampleObj = $derived(
-    selectedSample != null ? samples[selectedSample] : null
+    store.selectedSample != null ? store.samples[store.selectedSample] : null
   );
 
   // ── Scatterplot lifecycle ─────────────────────────────────────────────────
@@ -133,8 +132,8 @@
 
       sp.subscribe('select', ({ points: indices }) => {
         if (indices.length > 0) {
-          const sIdx = samples.indexOf(filteredSamples[indices[0]]);
-          setSelectedSample(sIdx >= 0 ? sIdx : null);
+          const sIdx = store.samples.indexOf(filteredSamples[indices[0]]);
+          store.selectedSample = sIdx >= 0 ? sIdx : null;
         }
       });
 
@@ -142,7 +141,7 @@
     }
   });
 
-  // ── Redraw base layer when filtered samples change ────────────────────────
+  // ── Redraw base layer when filtered store.samples change ────────────────────────
   $effect(() => {
     if (!scatterplot || filteredSamples.length === 0) return;
 
@@ -219,7 +218,7 @@
     <div class="mt-auto border-t border-slate-800 pt-3">
       <p class="text-xs text-slate-500">Base points sized by log(read depth).</p>
       <p class="text-xs text-slate-500">Overlay points sized by ASV proportion.</p>
-      <p class="text-xs text-slate-500 mt-1">{filteredSamples.length} / {samples.length} samples shown</p>
+      <p class="text-xs text-slate-500 mt-1">{filteredSamples.length} / {store.samples.length} samples shown</p>
     </div>
   </aside>
 
@@ -245,7 +244,7 @@
           </h3>
           <button
             class="text-xs text-slate-500 hover:text-slate-300"
-            onclick={() => setSelectedSample(null)}
+            onclick={() => store.selectedSample = null}
           >Close</button>
         </div>
 

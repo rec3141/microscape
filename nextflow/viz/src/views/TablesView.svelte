@@ -1,5 +1,5 @@
 <script>
-  import { samples, asvs, GROUP_HEX } from '../stores/data.svelte.js';
+  import { store, GROUP_HEX } from '../stores/data.svelte.js';
 
   // ── Tab state ─────────────────────────────────────────────────────────────
   let activeTable = $state('asvs'); // 'asvs' | 'samples'
@@ -23,7 +23,7 @@
   ];
 
   let cols = $derived(activeTable === 'asvs' ? asvCols : sampleCols);
-  let rawRows = $derived(activeTable === 'asvs' ? asvs : samples);
+  let rawRows = $derived(activeTable === 'asvs' ? store.asvs : store.samples);
 
   let filteredRows = $derived.by(() => {
     let rows = rawRows;

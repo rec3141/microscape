@@ -2,8 +2,7 @@
   import { onMount } from 'svelte';
   import createScatterplot from 'regl-scatterplot';
   import {
-    asvs, network, counts,
-    selectedAsv, setSelectedAsv, countsByAsv,
+    store, countsByAsv,
     GROUP_COLORS, GROUP_HEX,
   } from '../stores/data.svelte.js';
 
@@ -30,7 +29,7 @@
   /** Filtered ASVs */
   let filteredAsvs = $derived.by(() => {
     const re = taxonRe();
-    return asvs.filter(a => {
+    return store.asvs.filter(a => {
       if ((a.prevalence ?? 0) < minPrevalence) return false;
       if (re && !(re.test(a.taxonomy ?? '') || re.test(a.id ?? ''))) return false;
       return true;
@@ -41,7 +40,7 @@
   let idxMap = $derived.by(() => {
     const m = new Map();
     filteredAsvs.forEach((a, fi) => {
-      const oi = asvs.indexOf(a);
+      const oi = store.asvs.indexOf(a);
       m.set(oi, fi);
     });
     return m;
@@ -50,7 +49,7 @@
   /** Filtered edges */
   let filteredEdges = $derived.by(() => {
     if (!showEdges) return [];
-    return network.filter(e => {
+    return (store.network?.edges ?? store.network ?? []).filter(e => {
       if (Math.abs(e.weight ?? 0) < corrThreshold) return false;
       return idxMap.has(e.source) && idxMap.has(e.target);
     });
@@ -58,7 +57,7 @@
 
   // ── Selected ASV detail ───────────────────────────────────────────────────
   let selectedAsvObj = $derived(
-    selectedAsv != null ? asvs[selectedAsv] : null
+    store.selectedAsv != null ? store.asvs[store.selectedAsv] : null
   );
 
   // ── Scatterplot lifecycle ─────────────────────────────────────────────────
@@ -98,8 +97,8 @@
 
       sp.subscribe('select', ({ points: indices }) => {
         if (indices.length > 0) {
-          const oi = asvs.indexOf(filteredAsvs[indices[0]]);
-          setSelectedAsv(oi >= 0 ? oi : null);
+          const oi = store.asvs.indexOf(filteredAsvs[indices[0]]);
+          store.selectedAsv = oi >= 0 ? oi : null;
         }
       });
 
@@ -218,7 +217,7 @@
           {group}
         </div>
       {/each}
-      <p class="text-xs text-slate-500 mt-2">{filteredAsvs.length} / {asvs.length} ASVs shown</p>
+      <p class="text-xs text-slate-500 mt-2">{filteredAsvs.length} / {store.asvs.length} ASVs shown</p>
       <p class="text-xs text-slate-500">{filteredEdges.length} edges above threshold</p>
     </div>
   </aside>
@@ -258,7 +257,7 @@
           </h3>
           <button
             class="text-xs text-slate-500 hover:text-slate-300"
-            onclick={() => setSelectedAsv(null)}
+            onclick={() => store.selectedAsv = null}
           >Close</button>
         </div>
         <p class="mt-1 text-xs text-slate-400">{selectedAsvObj.taxonomy ?? 'No taxonomy'}</p>
