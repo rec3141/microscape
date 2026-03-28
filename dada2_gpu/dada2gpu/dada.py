@@ -144,11 +144,14 @@ def dada(derep, err=None, error_estimation_function=None, self_consist=False,
     err_history = []
     nconsist = 0 if initialize_err else 1  # R starts at 0 for init, 1 otherwise
 
-    # Determine number of parallel workers
+    # Determine parallelism strategy:
+    # - GPU available: run sequentially (GPU is already fast, shared resource)
+    # - CPU only: use ProcessPoolExecutor (ctypes holds GIL, threads don't help)
+    use_gpu = _cdada.gpu_available()
     n_workers = int(os.environ.get("DADA2_WORKERS", "0"))
     if n_workers == 0:
         n_workers = min(len(derep), os.cpu_count() or 1)
-    use_parallel = len(derep) > 1 and n_workers > 1
+    use_parallel = not use_gpu and len(derep) > 1 and n_workers > 1
 
     # Create a persistent process pool (reused across self-consistency iterations)
     pool = None
@@ -156,6 +159,8 @@ def dada(derep, err=None, error_estimation_function=None, self_consist=False,
         from concurrent.futures import ProcessPoolExecutor
         os.environ["OMP_NUM_THREADS"] = "1"
         pool = ProcessPoolExecutor(max_workers=n_workers)
+    elif use_gpu:
+        os.environ["OMP_NUM_THREADS"] = "1"
 
     while True:
         nconsist += 1
@@ -166,23 +171,30 @@ def dada(derep, err=None, error_estimation_function=None, self_consist=False,
         # R uses MAX_CLUST=1 on the initialization pass (nconsist==1 after init)
         max_clust_iter = 1 if initialize_err else o["MAX_CLUST"]
 
+        # Extend error matrix once for all samples (upstream optimization)
+        max_q_all = max((int(np.nanmax(d["quals"])) + 1 if d["quals"].size and not np.all(np.isnan(d["quals"])) else 0) for d in derep)
+        erri = err.copy()
+        if max_q_all > erri.shape[1]:
+            extra = np.tile(erri[:, -1:], (1, max_q_all - erri.shape[1]))
+            erri = np.hstack([erri, extra])
+
         if use_parallel and pool is not None:
             # Parallel: dispatch each sample to a persistent worker pool
-            work_args = [(drp, err, o, max_clust_iter) for drp in derep]
+            work_args = [(drp, erri, o, max_clust_iter) for drp in derep]
             results = list(pool.map(_run_one_sample, work_args))
 
             if verbose and self_consist:
                 sys.stdout.write("." * len(derep))
                 sys.stdout.flush()
         else:
-            # Sequential: single sample or single worker
+            # Sequential: single sample, GPU mode, or single worker
             results = []
             for i, drp in enumerate(derep):
                 if verbose and self_consist:
                     sys.stdout.write(".")
                     sys.stdout.flush()
 
-                res = _run_one_sample((drp, err, o, max_clust_iter))
+                res = _run_one_sample((drp, erri, o, max_clust_iter))
                 results.append(res)
 
         trans_list = [r["trans"] for r in results]
