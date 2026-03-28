@@ -83,8 +83,15 @@ print(f"[INFO] Plate {plate_id} : learning error rates from "
 # files and fits a parametric error model. Returns a 16 x ncol numpy array
 # representing transition probabilities for each quality score.
 # ---------------------------------------------------------------------------
-errF = dada2gpu.learn_errors(fwd_files, nbases=1e8)
-errR = dada2gpu.learn_errors(rev_files, nbases=1e8)
+# Default to 1e7 bases (10M) — sufficient for error learning and much faster
+# than 1e8 (100M). R dada2 uses 1e8 but has faster internal threading (TBB).
+# Set DADA2_NBASES env var to override.
+nbases = float(os.environ.get("DADA2_NBASES", "1e7"))
+print(f"[INFO] Using {nbases:.0e} bases for error learning "
+      f"({len(fwd_files)} fwd + {len(rev_files)} rev files available)")
+
+errF = dada2gpu.learn_errors(fwd_files, nbases=nbases)
+errR = dada2gpu.learn_errors(rev_files, nbases=nbases)
 
 with open(f"{plate_id}_errF.pkl", "wb") as f:
     pickle.dump(errF, f)
