@@ -5,7 +5,7 @@
     asvs, network, counts,
     selectedAsv, setSelectedAsv, countsByAsv,
     GROUP_COLORS, GROUP_HEX,
-  } from '../stores/data.js';
+  } from '../stores/data.svelte.js';
 
   // ── Controls ──────────────────────────────────────────────────────────────
   let minPrevalence = $state(0);

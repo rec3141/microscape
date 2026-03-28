@@ -1,5 +1,5 @@
 <script>
-  import { samples, asvs, GROUP_HEX } from '../stores/data.js';
+  import { samples, asvs, GROUP_HEX } from '../stores/data.svelte.js';
 
   // ── Tab state ─────────────────────────────────────────────────────────────
   let activeTable = $state('asvs'); // 'asvs' | 'samples'

@@ -4,7 +4,7 @@
   import SampleView from './views/SampleView.svelte';
   import NetworkView from './views/NetworkView.svelte';
   import TablesView from './views/TablesView.svelte';
-  import { loadData, loading, error } from './stores/data.js';
+  import { loadData, loading, error } from './stores/data.svelte.js';
 
   let activeTab = $state('samples');
 

@@ -5,7 +5,7 @@
     samples, asvs, counts,
     selectedSample, setSelectedSample, countsBySample,
     GROUP_COLORS, GROUP_HEX,
-  } from '../stores/data.js';
+  } from '../stores/data.svelte.js';
 
   // ── Sidebar controls ──────────────────────────────────────────────────────
   let minReads = $state(0);
