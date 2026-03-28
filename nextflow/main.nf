@@ -72,6 +72,10 @@ def helpMessage() {
     Network:
       --min_prevalence N   Min samples per ASV for SparCC [default: 5]
 
+    Language:
+      --lang STR           'R' or 'python' [default: R]
+      --dada2gpu_path PATH Path to python-dada2 installation [default: /data/dada2_gpu]
+
     Resources:
       --threads N          General thread count [default: 8]
       --dada_cpus N        CPUs for DADA2 processes [default: 8]

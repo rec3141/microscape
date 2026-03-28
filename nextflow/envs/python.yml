@@ -7,3 +7,8 @@ dependencies:
   - cutadapt=4.9
   - biopython
   - pigz
+  # For Python DADA2 pipeline (--lang python)
+  - numpy
+  - pandas
+  - matplotlib
+  - scipy
