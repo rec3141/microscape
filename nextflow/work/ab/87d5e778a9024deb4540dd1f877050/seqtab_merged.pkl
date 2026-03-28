@@ -1,0 +1,1 @@
+/data/microscape_v2/nextflow/work/45/8c6321471b6988da08af3af0f1a311/seqtab_merged.pkl

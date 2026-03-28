@@ -1,0 +1,1435 @@
+Mar-28 03:33:23.331 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --input /data/microscape_v2/test_data --skip_primer_removal --outdir /data/microscape_v2/test_results_hybrid --lang python --dada_cpus 8 --min_samples 2 --min_seqs 3 --min_reads 100 --min_prevalence 3 --ref_databases 'silva:/matika/microscape/ref_dada2_silva_v138-2_train_set_uniq.fasta.gz:Domain,Phylum,Class,Order,Family,Genus' -c /dev/fd/63
+Mar-28 03:33:23.394 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 23.04.2
+Mar-28 03:33:23.407 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/usr/lib/ont-nextflow/plugins; core-plugins: nf-amazon@1.16.2,nf-azure@1.0.1,nf-codecommit@0.1.4,nf-console@1.0.5,nf-ga4gh@1.0.5,nf-google@1.7.3,nf-tower@1.5.12,nf-wave@0.8.3
+Mar-28 03:33:23.415 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Mar-28 03:33:23.415 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Mar-28 03:33:23.418 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Mar-28 03:33:23.428 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Mar-28 03:33:23.445 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /data/microscape_v2/nextflow/nextflow.config
+Mar-28 03:33:23.448 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /dev/fd/63
+Mar-28 03:33:23.448 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /data/microscape_v2/nextflow/nextflow.config
+Mar-28 03:33:23.448 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /dev/fd/63
+Mar-28 03:33:23.474 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Mar-28 03:33:24.258 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Mar-28 03:33:24.305 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declararion
+Mar-28 03:33:24.312 [main] INFO  nextflow.cli.CmdRun - Launching `main.nf` [hopeful_noyce] DSL2 - revision: 6e10c80d74
+Mar-28 03:33:24.312 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Mar-28 03:33:24.312 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Mar-28 03:33:24.322 [main] DEBUG nextflow.secret.LocalSecretsProvider - Secrets store: /usr/lib/ont-nextflow/secrets/store.json
+Mar-28 03:33:24.325 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@2a8a3ada] - activable => nextflow.secret.LocalSecretsProvider@2a8a3ada
+Mar-28 03:33:24.378 [main] DEBUG nextflow.Session - Session UUID: d03b83e1-bfbd-42ea-83b5-f574f0e22638
+Mar-28 03:33:24.378 [main] DEBUG nextflow.Session - Run name: hopeful_noyce
+Mar-28 03:33:24.379 [main] DEBUG nextflow.Session - Executor pool size: 16
+Mar-28 03:33:24.389 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Mar-28 03:33:24.406 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 23.04.2 build 5871
+  Created: 08-06-2023 09:33 UTC (04:33 CDT)
+  System: Linux 5.15.0-139-generic
+  Runtime: Groovy 3.0.16 on OpenJDK 64-Bit Server VM 17.0.15+6-Ubuntu-0ubuntu120.04
+  Encoding: UTF-8 (UTF-8)
+  Process: 3105872@GXB04653 [127.0.0.1]
+  CPUs: 16 - Mem: 62.6 GB (40 GB) - Swap: 38.2 GB (22.6 GB)
+Mar-28 03:33:24.426 [main] DEBUG nextflow.Session - Work-dir: /data/microscape_v2/nextflow/work [ext2/ext3]
+Mar-28 03:33:24.453 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[GoogleLifeSciencesExecutor, AwsBatchExecutor, GoogleBatchExecutor]
+Mar-28 03:33:24.462 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Mar-28 03:33:24.483 [main] DEBUG nextflow.Session - Observer factory: TowerFactory
+Mar-28 03:33:24.512 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Mar-28 03:33:24.521 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Mar-28 03:33:24.557 [main] DEBUG nextflow.Session - Session start
+Mar-28 03:33:24.561 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: /data/microscape_v2/test_results_hybrid/pipeline_info/trace.txt
+Mar-28 03:33:25.071 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Mar-28 03:33:25.928 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_low` matches labels `process_low` for process with name DADA2_FILTER_TRIM
+Mar-28 03:33:25.931 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:25.932 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:25.934 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Mar-28 03:33:25.937 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=62.6 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Mar-28 03:33:25.993 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name DADA2_LEARN_ERRORS
+Mar-28 03:33:25.994 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:25.994 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.006 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name DADA2_DENOISE
+Mar-28 03:33:26.006 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.006 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.013 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name MERGE_SEQTABS
+Mar-28 03:33:26.014 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.014 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.018 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name REMOVE_CHIMERAS
+Mar-28 03:33:26.018 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.018 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.021 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name FILTER_SEQTAB
+Mar-28 03:33:26.022 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.022 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.028 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name ASSIGN_TAXONOMY
+Mar-28 03:33:26.028 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.028 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.034 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name RENORMALIZE
+Mar-28 03:33:26.035 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.035 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.039 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name CLUSTER_TSNE
+Mar-28 03:33:26.040 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.040 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.042 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name NETWORK_SPARCC
+Mar-28 03:33:26.043 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.043 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.049 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_low` matches labels `process_low` for process with name BUILD_VIZ
+Mar-28 03:33:26.049 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 03:33:26.049 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 03:33:26.051 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: DADA2_LEARN_ERRORS, BUILD_PHYLOGENY, DADA2_DENOISE, RENORMALIZE, LOAD_METADATA, FILTER_SEQTAB, DADA2_FILTER_TRIM, CLUSTER_TSNE, REMOVE_CHIMERAS, NETWORK_SPARCC, ASSIGN_TAXONOMY, REMOVE_PRIMERS, DEMULTIPLEX, BUILD_VIZ, MERGE_SEQTABS
+Mar-28 03:33:26.053 [main] DEBUG nextflow.Session - Igniting dataflow network (14)
+Mar-28 03:33:26.056 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /data/microscape_v2/test_data/; pattern: *_R{1,2}*.fastq.gz; options: [:]
+Mar-28 03:33:26.056 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > DADA2_FILTER_TRIM
+Mar-28 03:33:26.056 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > DADA2_LEARN_ERRORS
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > DADA2_DENOISE
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MERGE_SEQTABS
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > REMOVE_CHIMERAS
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_SEQTAB
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ASSIGN_TAXONOMY
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > RENORMALIZE
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CLUSTER_TSNE
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NETWORK_SPARCC
+Mar-28 03:33:26.057 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > BUILD_VIZ
+Mar-28 03:33:26.057 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Mar-28 03:33:26.057 [main] DEBUG nextflow.Session - Session await
+Mar-28 03:33:26.265 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.268 [Task submitter] INFO  nextflow.Session - [12/04aa30] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B05)
+Mar-28 03:33:26.278 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.279 [Task submitter] INFO  nextflow.Session - [7c/daa2d7] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D08)
+Mar-28 03:33:26.286 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.287 [Task submitter] INFO  nextflow.Session - [8e/a53c0d] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G08)
+Mar-28 03:33:26.291 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.291 [Task submitter] INFO  nextflow.Session - [69/342e25] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H07)
+Mar-28 03:33:26.297 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.301 [Task submitter] INFO  nextflow.Session - [0e/6623b7] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E05)
+Mar-28 03:33:26.307 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.308 [Task submitter] INFO  nextflow.Session - [a0/0ff588] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B01)
+Mar-28 03:33:26.322 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.330 [Task submitter] INFO  nextflow.Session - [d7/6622e4] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H08)
+Mar-28 03:33:26.336 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.346 [Task submitter] INFO  nextflow.Session - [d0/aadf2a] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G07)
+Mar-28 03:33:26.923 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E05); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/0e/6623b7204121c5a98ede38bccc38c5]
+Mar-28 03:33:26.926 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:26.927 [Task submitter] INFO  nextflow.Session - [98/162afd] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B02)
+Mar-28 03:33:26.944 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Mar-28 03:33:27.174 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H08); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d7/6622e4f84a36817bb094753fe0b738]
+Mar-28 03:33:27.177 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:27.177 [Task submitter] INFO  nextflow.Session - [11/66bc4d] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F01)
+Mar-28 03:33:27.338 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B02); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/98/162afd2dd8639d636c3fd23ffcccb8]
+Mar-28 03:33:27.341 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:27.341 [Task submitter] INFO  nextflow.Session - [a1/be0db1] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E07)
+Mar-28 03:33:27.361 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D08); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/7c/daa2d7a79ececa2ebb8fb4e91faeb3]
+Mar-28 03:33:27.364 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:27.366 [Task submitter] INFO  nextflow.Session - [9e/d698c9] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F03)
+Mar-28 03:33:27.495 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H07); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/69/342e258cb26ecbcf502b87b7950a09]
+Mar-28 03:33:27.504 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:27.525 [Task submitter] INFO  nextflow.Session - [bf/ca40c9] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F12)
+Mar-28 03:33:27.588 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G08); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/8e/a53c0d25c0e0c768cfd13733b1c691]
+Mar-28 03:33:27.594 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:27.594 [Task submitter] INFO  nextflow.Session - [9a/4b6985] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G05)
+Mar-28 03:33:27.880 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F12); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/bf/ca40c969eded83a40f02a55661c15f]
+Mar-28 03:33:27.883 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:27.884 [Task submitter] INFO  nextflow.Session - [d7/58f75b] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F07)
+Mar-28 03:33:28.257 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B05); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/12/04aa30ca9054f2aa12633eced41627]
+Mar-28 03:33:28.262 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:28.262 [Task submitter] INFO  nextflow.Session - [e5/5de807] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D04)
+Mar-28 03:33:28.416 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G07); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d0/aadf2a53a119bd5e6c776b15db44f2]
+Mar-28 03:33:28.418 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:28.419 [Task submitter] INFO  nextflow.Session - [d4/5bcc2d] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D09)
+Mar-28 03:33:28.424 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B01); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/a0/0ff58866815db9c68231544185d9a5]
+Mar-28 03:33:28.427 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:28.428 [Task submitter] INFO  nextflow.Session - [83/c3a263] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F10)
+Mar-28 03:33:28.570 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G05); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/9a/4b698527b4be5bab46254cc02d1f0a]
+Mar-28 03:33:28.577 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:28.578 [Task submitter] INFO  nextflow.Session - [60/648c0d] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D05)
+Mar-28 03:33:28.748 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 18; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F10); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/83/c3a263addef36fc78441be1da60dc0]
+Mar-28 03:33:28.750 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:28.750 [Task submitter] INFO  nextflow.Session - [c6/d0d7e5] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D02)
+Mar-28 03:33:28.894 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D09); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d4/5bcc2d9283b3e617f5b8168d1e991e]
+Mar-28 03:33:28.896 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:28.897 [Task submitter] INFO  nextflow.Session - [d4/2508d3] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G11)
+Mar-28 03:33:29.137 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 21; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G11); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d4/2508d3ceb7ac04f253ac1da5791297]
+Mar-28 03:33:29.139 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.139 [Task submitter] INFO  nextflow.Session - [46/a37c05] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A05)
+Mar-28 03:33:29.279 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 16; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E07); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/a1/be0db1ed35a06fc587044e7133069f]
+Mar-28 03:33:29.282 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.282 [Task submitter] INFO  nextflow.Session - [c7/efff06] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A07)
+Mar-28 03:33:29.282 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F03); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/9e/d698c925f5fbb6fb7aeb6db525c9b5]
+Mar-28 03:33:29.284 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.284 [Task submitter] INFO  nextflow.Session - [a5/4efc82] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H01)
+Mar-28 03:33:29.460 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F07); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d7/58f75b64aeb2208d3c7a374f6da966]
+Mar-28 03:33:29.463 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.463 [Task submitter] INFO  nextflow.Session - [c3/f8cf54] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C10)
+Mar-28 03:33:29.599 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D04); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/e5/5de807f914b5a59205a3ff65f5302b]
+Mar-28 03:33:29.602 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.602 [Task submitter] INFO  nextflow.Session - [0e/61a83a] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H09)
+Mar-28 03:33:29.757 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 22; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C10); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/c3/f8cf54b7cef03cc570597db1283be6]
+Mar-28 03:33:29.760 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.760 [Task submitter] INFO  nextflow.Session - [cb/abfe81] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E03)
+Mar-28 03:33:29.899 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F01); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/11/66bc4dd16497d7998e7a486cc0e433]
+Mar-28 03:33:29.902 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.902 [Task submitter] INFO  nextflow.Session - [38/11ebf6] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D11)
+Mar-28 03:33:29.923 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 26; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H09); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/0e/61a83a6d1b6edfcb10a5f0ffaa5d9c]
+Mar-28 03:33:29.925 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.925 [Task submitter] INFO  nextflow.Session - [c1/35271e] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F08)
+Mar-28 03:33:29.945 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 32; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D05); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/60/648c0dc89f99984a708bb258a36959]
+Mar-28 03:33:29.948 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:29.948 [Task submitter] INFO  nextflow.Session - [eb/aaf6fc] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B09)
+Mar-28 03:33:30.226 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 28; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D11); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/38/11ebf62feca8195b26d64fab93fc48]
+Mar-28 03:33:30.228 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:30.229 [Task submitter] INFO  nextflow.Session - [cd/195f49] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C04)
+Mar-28 03:33:30.246 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A07); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/c7/efff06f0f3962966b0ef89e09a456d]
+Mar-28 03:33:30.248 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:30.248 [Task submitter] INFO  nextflow.Session - [d8/301874] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E01)
+Mar-28 03:33:30.507 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 34; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A05); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/46/a37c05063d201331c1732345e01bb1]
+Mar-28 03:33:30.510 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:30.510 [Task submitter] INFO  nextflow.Session - [5d/54dbcc] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H12)
+Mar-28 03:33:30.709 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 31; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H12); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/5d/54dbcc8e3a42ccd0637c88be539c53]
+Mar-28 03:33:30.711 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:30.711 [Task submitter] INFO  nextflow.Session - [9c/8e2135] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H03)
+Mar-28 03:33:30.877 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 17; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D02); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/c6/d0d7e5aa1ee1f16542d6cea6d98b11]
+Mar-28 03:33:30.880 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:30.880 [Task submitter] INFO  nextflow.Session - [15/7724c6] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B10)
+Mar-28 03:33:31.030 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 23; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H01); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/a5/4efc820a4ef4e70f882b98702748b2]
+Mar-28 03:33:31.032 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.032 [Task submitter] INFO  nextflow.Session - [91/906e10] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A12)
+Mar-28 03:33:31.156 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 35; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B10); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/15/7724c625997026045220718801c59b]
+Mar-28 03:33:31.160 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.160 [Task submitter] INFO  nextflow.Session - [25/b5b34d] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B11)
+Mar-28 03:33:31.301 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 36; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A12); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/91/906e1036dd124563a240fe51a397ce]
+Mar-28 03:33:31.303 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.304 [Task submitter] INFO  nextflow.Session - [a2/a46033] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D10)
+Mar-28 03:33:31.307 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 27; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F08); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/c1/35271eb997fd8361afeb13bee57fc6]
+Mar-28 03:33:31.310 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.310 [Task submitter] INFO  nextflow.Session - [bd/9850ca] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F04)
+Mar-28 03:33:31.331 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 29; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C04); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/cd/195f49a058b7a94102a3b7c56a26d3]
+Mar-28 03:33:31.333 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.334 [Task submitter] INFO  nextflow.Session - [70/0481a7] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C06)
+Mar-28 03:33:31.466 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 40; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B11); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/25/b5b34d75e21e25cd0688781ff2274b]
+Mar-28 03:33:31.483 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.484 [Task submitter] INFO  nextflow.Session - [1d/24eddc] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G12)
+Mar-28 03:33:31.588 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 42; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D10); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/a2/a460337d2e20d3c37749c2f2d0ae7b]
+Mar-28 03:33:31.591 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.591 [Task submitter] INFO  nextflow.Session - [b1/d87bed] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G10)
+Mar-28 03:33:31.846 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 43; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G12); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/1d/24eddc95104b64081fe8a4afd01c4c]
+Mar-28 03:33:31.848 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.848 [Task submitter] INFO  nextflow.Session - [db/871fd1] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D06)
+Mar-28 03:33:31.856 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 53; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G10); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/b1/d87bed08562956b92429c7c4614195]
+Mar-28 03:33:31.858 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:31.858 [Task submitter] INFO  nextflow.Session - [e5/2ff88b] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E09)
+Mar-28 03:33:32.140 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 24; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B09); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/eb/aaf6fc6d2528fdaa9110fe78fd9f80]
+Mar-28 03:33:32.141 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:32.141 [Task submitter] INFO  nextflow.Session - [41/48fe07] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H06)
+Mar-28 03:33:32.266 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 33; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H03); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/9c/8e21357250b2112715eb3d911059ff]
+Mar-28 03:33:32.269 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:32.269 [Task submitter] INFO  nextflow.Session - [60/9b64c4] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C01)
+Mar-28 03:33:32.490 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 38; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F04); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/bd/9850cab3106913c4f77182280bdab7]
+Mar-28 03:33:32.492 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:32.492 [Task submitter] INFO  nextflow.Session - [63/4a1559] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B06)
+Mar-28 03:33:32.507 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 25; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E03); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/cb/abfe8164e70eb0deb474e155579ffa]
+Mar-28 03:33:32.510 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:32.510 [Task submitter] INFO  nextflow.Session - [de/94c6d0] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E08)
+Mar-28 03:33:32.522 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 45; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C01); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/60/9b64c43f64c2f07e1a50995d78057a]
+Mar-28 03:33:32.526 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:32.526 [Task submitter] INFO  nextflow.Session - [87/94176a] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C12)
+Mar-28 03:33:32.761 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 39; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E09); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/e5/2ff88bf5d3127e14fadad9aa3e16fb]
+Mar-28 03:33:32.765 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:32.765 [Task submitter] INFO  nextflow.Session - [ec/4e8f6c] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F06)
+Mar-28 03:33:32.931 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 47; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C12); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/87/94176adcb2c7fb6c78dec594a5067f]
+Mar-28 03:33:32.933 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:32.933 [Task submitter] INFO  nextflow.Session - [c5/ffd97b] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B07)
+Mar-28 03:33:33.228 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 30; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E01); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d8/3018744ffc37a7994674658c4113f2]
+Mar-28 03:33:33.230 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:33.230 [Task submitter] INFO  nextflow.Session - [54/8637c3] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H11)
+Mar-28 03:33:33.283 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 44; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H06); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/41/48fe07031cd8d76c4061f9ba52669f]
+Mar-28 03:33:33.287 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:33.287 [Task submitter] INFO  nextflow.Session - [40/875375] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H05)
+Mar-28 03:33:33.500 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 51; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H11); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/54/8637c305022b8534a1c74e7220f24b]
+Mar-28 03:33:33.502 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:33.502 [Task submitter] INFO  nextflow.Session - [f0/be032e] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D03)
+Mar-28 03:33:33.601 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 41; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D06); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/db/871fd1fdc7a517f81e5bac73b120a8]
+Mar-28 03:33:33.603 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:33.603 [Task submitter] INFO  nextflow.Session - [10/743f15] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C09)
+Mar-28 03:33:33.799 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 37; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C06); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/70/0481a76204bd335b7a1ac040804091]
+Mar-28 03:33:33.800 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:33.801 [Task submitter] INFO  nextflow.Session - [7a/5a50e8] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G09)
+Mar-28 03:33:33.936 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 46; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E08); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/de/94c6d0b4e174d32dd2b25b4ee576aa]
+Mar-28 03:33:33.938 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:33.938 [Task submitter] INFO  nextflow.Session - [01/fb1973] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B12)
+Mar-28 03:33:34.172 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 57; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B12); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/01/fb19738ad5e186393440203591e535]
+Mar-28 03:33:34.173 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:34.173 [Task submitter] INFO  nextflow.Session - [31/b6a381] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G03)
+Mar-28 03:33:34.174 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 48; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F06); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/ec/4e8f6c9f6a3f3d7bca549a1f513051]
+Mar-28 03:33:34.176 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:34.176 [Task submitter] INFO  nextflow.Session - [8d/2ec012] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C11)
+Mar-28 03:33:34.330 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 55; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G09); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/7a/5a50e8dd5222c306000d675a6171e6]
+Mar-28 03:33:34.332 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:34.332 [Task submitter] INFO  nextflow.Session - [78/0bbfc8] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C07)
+Mar-28 03:33:34.466 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 60; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C11); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/8d/2ec01251cd12ccacee96a9bf1a3cd2]
+Mar-28 03:33:34.468 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:34.468 [Task submitter] INFO  nextflow.Session - [66/08af32] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A03)
+Mar-28 03:33:34.560 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 59; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B06); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/63/4a1559f127cd82e3f8fea4d22e84c4]
+Mar-28 03:33:34.566 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:34.566 [Task submitter] INFO  nextflow.Session - [2e/bacc2c] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C08)
+Mar-28 03:33:34.629 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 50; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H05); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/40/8753754907b5206d74721dda7af182]
+Mar-28 03:33:34.631 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:34.631 [Task submitter] INFO  nextflow.Session - [ff/8d9aff] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B03)
+Mar-28 03:33:34.746 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 54; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C09); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/10/743f1541b6c9138d5dec49f9be2750]
+Mar-28 03:33:34.749 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:34.749 [Task submitter] INFO  nextflow.Session - [2f/c1199f] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G06)
+Mar-28 03:33:34.984 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 49; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B07); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/c5/ffd97b2bb7e3dfc9d1abf75facf1cc]
+Mar-28 03:33:34.987 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:34.987 [Task submitter] INFO  nextflow.Session - [75/fc0ef7] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E10)
+Mar-28 03:33:35.201 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 77; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E10); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/75/fc0ef7128ae6479a9d00404d14ec51]
+Mar-28 03:33:35.203 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:35.203 [Task submitter] INFO  nextflow.Session - [29/14c5fe] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A11)
+Mar-28 03:33:35.343 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 52; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D03); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/f0/be032ed96e2d2564743587a2c95816]
+Mar-28 03:33:35.346 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:35.347 [Task submitter] INFO  nextflow.Session - [85/875d0a] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H04)
+Mar-28 03:33:35.484 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 62; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A11); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/29/14c5fe778fc9ef4b9e8708e2c08abf]
+Mar-28 03:33:35.486 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:35.486 [Task submitter] INFO  nextflow.Session - [18/e56982] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D12)
+Mar-28 03:33:35.697 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 78; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G06); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/2f/c1199f265eb479295b7669ff7058cf]
+Mar-28 03:33:35.698 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:35.698 [Task submitter] INFO  nextflow.Session - [b3/636820] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E06)
+Mar-28 03:33:35.711 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 65; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D12); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/18/e569821241d6102c253448796be0ad]
+Mar-28 03:33:35.712 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:35.712 [Task submitter] INFO  nextflow.Session - [a3/111a9d] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D07)
+Mar-28 03:33:35.883 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 56; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G03); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/31/b6a381aac75b7c443ecbbf0d64b627]
+Mar-28 03:33:35.887 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:35.887 [Task submitter] INFO  nextflow.Session - [0d/bf4634] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A06)
+Mar-28 03:33:36.244 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 58; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C07); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/78/0bbfc85b16e0bc7dda222e550b0ddf]
+Mar-28 03:33:36.246 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:36.246 [Task submitter] INFO  nextflow.Session - [cc/2529d1] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B04)
+Mar-28 03:33:36.471 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 73; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A03); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/66/08af32520cbc8b7c3de8fe3117c2dc]
+Mar-28 03:33:36.474 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:36.474 [Task submitter] INFO  nextflow.Session - [83/4172e4] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A10)
+Mar-28 03:33:36.619 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 69; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D07); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/a3/111a9ddfa361735b232e504435d572]
+Mar-28 03:33:36.622 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:36.622 [Task submitter] INFO  nextflow.Session - [7d/875733] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A04)
+Mar-28 03:33:36.748 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 61; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C08); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/2e/bacc2c23d88271050db77b27f113c5]
+Mar-28 03:33:36.751 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:36.751 [Task submitter] INFO  nextflow.Session - [b4/2ae6ca] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E02)
+Mar-28 03:33:36.755 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 75; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B03); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/ff/8d9aff59b5d772ff82f3de95a2a052]
+Mar-28 03:33:36.757 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:36.757 [Task submitter] INFO  nextflow.Session - [0a/d80467] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C03)
+Mar-28 03:33:36.771 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 71; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A10); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/83/4172e49276613cfb50d692e8fc5a75]
+Mar-28 03:33:36.774 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:36.774 [Task submitter] INFO  nextflow.Session - [d7/c8f4e0] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A08)
+Mar-28 03:33:36.953 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 63; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H04); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/85/875d0a7fa888e0e18dc65ac9c6af01]
+Mar-28 03:33:36.955 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:36.955 [Task submitter] INFO  nextflow.Session - [d4/2d8d53] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F05)
+Mar-28 03:33:37.120 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 68; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A06); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/0d/bf4634b415895d6114cf3f0bf885aa]
+Mar-28 03:33:37.122 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:37.122 [Task submitter] INFO  nextflow.Session - [7f/0f6efe] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C02)
+Mar-28 03:33:37.376 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 86; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A08); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d7/c8f4e0c55ec010fd3ece9c582127c9]
+Mar-28 03:33:37.377 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:37.377 [Task submitter] INFO  nextflow.Session - [a4/d498e2] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A02)
+Mar-28 03:33:37.524 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 70; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B04); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/cc/2529d1f5acd662d4ed376ad32e0c03]
+Mar-28 03:33:37.527 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:37.527 [Task submitter] INFO  nextflow.Session - [c3/5b656c] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A09)
+Mar-28 03:33:37.830 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 66; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A04); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/7d/87573307ac929b628a2849defa3c2e]
+Mar-28 03:33:37.831 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:37.832 [Task submitter] INFO  nextflow.Session - [cf/91db90] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F09)
+Mar-28 03:33:37.848 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 67; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E06); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/b3/636820fb2cedc84d5844e36249e816]
+Mar-28 03:33:37.849 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:37.849 [Task submitter] INFO  nextflow.Session - [ec/8f815b] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G04)
+Mar-28 03:33:38.031 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 79; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A09); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/c3/5b656c219c08c6b4fe2813af56667f]
+Mar-28 03:33:38.033 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:38.034 [Task submitter] INFO  nextflow.Session - [21/98569d] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B08)
+Mar-28 03:33:38.063 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 74; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F05); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d4/2d8d5391f50340460e2350419bbdd1]
+Mar-28 03:33:38.067 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:38.067 [Task submitter] INFO  nextflow.Session - [d9/7dfd53] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D01)
+Mar-28 03:33:38.354 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 83; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D01); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d9/7dfd537cdd591f3a8ebe29b849ddff]
+Mar-28 03:33:38.357 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:38.357 [Task submitter] INFO  nextflow.Session - [f5/342194] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G01)
+Mar-28 03:33:38.487 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 81; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F09); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/cf/91db908a074581917033de758b1daa]
+Mar-28 03:33:38.489 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:38.489 [Task submitter] INFO  nextflow.Session - [05/c1d445] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H02)
+Mar-28 03:33:39.050 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 76; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A02); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/a4/d498e2c9e48dd24490382abf4f6bdb]
+Mar-28 03:33:39.052 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.052 [Task submitter] INFO  nextflow.Session - [38/f95353] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F11)
+Mar-28 03:33:39.085 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 94; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G04); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/ec/8f815b21cba6784566febf9d60f7a2]
+Mar-28 03:33:39.090 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.090 [Task submitter] INFO  nextflow.Session - [43/c75939] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G02)
+Mar-28 03:33:39.218 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 72; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C03); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/0a/d804670473fc20daa9b2d18cac16c0]
+Mar-28 03:33:39.221 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.221 [Task submitter] INFO  nextflow.Session - [24/1ef028] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E11)
+Mar-28 03:33:39.347 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 64; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E02); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/b4/2ae6ca959ade4aaa8deb06f60aff77]
+Mar-28 03:33:39.350 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 85; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F11); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/38/f953531a3495c69da84497af07bbf0]
+Mar-28 03:33:39.352 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.352 [Task submitter] INFO  nextflow.Session - [3c/e68ce4] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F02)
+Mar-28 03:33:39.355 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.356 [Task submitter] INFO  nextflow.Session - [aa/856640] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H10)
+Mar-28 03:33:39.617 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 89; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E11); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/24/1ef028320e69621c56ffa7be369274]
+Mar-28 03:33:39.619 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.619 [Task submitter] INFO  nextflow.Session - [7b/7476b7] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E04)
+Mar-28 03:33:39.621 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 82; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B08); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/21/98569d32a31385a3da24c8616a80a5]
+Mar-28 03:33:39.623 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.623 [Task submitter] INFO  nextflow.Session - [d7/bc24be] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E12)
+Mar-28 03:33:39.798 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 91; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H10); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/aa/8566402530b4e2b7e8f615de1fdea0]
+Mar-28 03:33:39.800 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.800 [Task submitter] INFO  nextflow.Session - [c2/5de2cb] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C05)
+Mar-28 03:33:39.908 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 90; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C02); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/7f/0f6efedc909216a06b7253ad54cf0c]
+Mar-28 03:33:39.912 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:39.912 [Task submitter] INFO  nextflow.Session - [8f/49328d] Submitted process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A01)
+Mar-28 03:33:39.942 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 88; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E12); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/d7/bc24be4326e928860b4545702e616f]
+Mar-28 03:33:40.080 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 80; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G01); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/f5/342194c1e1784ae353fec7e38879ee]
+Mar-28 03:33:40.544 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 92; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E04); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/7b/7476b7dddbacff160755886b8a4244]
+Mar-28 03:33:40.853 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 84; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H02); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/05/c1d445e38f85fa6528e9c01df00e36]
+Mar-28 03:33:41.006 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 87; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G02); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/43/c75939f168e28cbd60d416d6c80723]
+Mar-28 03:33:41.053 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 95; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C05); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/c2/5de2cb235b53e5f862065c7ebf4f8d]
+Mar-28 03:33:41.192 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 96; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A01); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/8f/49328d9503afb3123bd6d315a4e6a9]
+Mar-28 03:33:41.406 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 93; name: DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F02); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/3c/e68ce43e631e0b8ff45f3a349a9a03]
+Mar-28 03:33:41.426 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 03:33:41.426 [Task submitter] INFO  nextflow.Session - [8d/245cdf] Submitted process > DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)
+Mar-28 03:33:54.601 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 97; name: DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1); status: COMPLETED; exit: 1; error: -; workDir: /data/microscape_v2/nextflow/work/8d/245cdf93985fd4f0f82325b7329faf]
+Mar-28 03:33:54.603 [Task monitor] DEBUG nextflow.processor.TaskProcessor - Handling unexpected condition for
+  task: name=DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1); work-dir=/data/microscape_v2/nextflow/work/8d/245cdf93985fd4f0f82325b7329faf
+  error [nextflow.exception.ProcessFailedException]: Process `DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)` terminated with an error exit status (1)
+Mar-28 03:33:54.676 [Task monitor] ERROR nextflow.processor.TaskProcessor - Execution aborted due to an unexpected error
+java.lang.StackOverflowError: null
+	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1017)
+	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:150)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:862)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:760)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:681)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:639)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at groovy.lang.Closure.call(Closure.java:414)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGetProperty(AbstractCallSite.java:329)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf:129)
+	at _nf_config_694680bf$_run_closure5$_closure19.doCall(_nf_config_694680bf)
+	at jdk.internal.reflect.GeneratedMethodAccessor362.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy:612)
+	at nextflow.processor.LazyMap.resolveImpl(TaskConfig.groovy)
+	at nextflow.processor.LazyMap.resolve(TaskConfig.groovy:573)
+	at nextflow.processor.LazyMap.getValue(TaskConfig.groovy:640)
+	at nextflow.processor.LazyMap.get(TaskConfig.groovy:635)
+	at nextflow.processor.TaskConfig.get(TaskConfig.groovy:151)
+	at nextflow.processor.TaskConfig.getErrorStrategy(TaskConfig.groovy:224)
+	at nextflow.processor.TaskConfig.getMaxRetries(TaskConfig.groovy:303)
+	at jdk.internal.reflect.GeneratedMethodAccessor363.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaBeanProperty.getProperty(MetaBeanProperty.java:59)
+	at nextflow.processor.TaskConfig.getProperty(TaskConfig.groovy:128)
+Mar-28 03:33:54.683 [Task monitor] DEBUG nextflow.Session - Session aborted -- Cause: Process `DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)` terminated with an error exit status (1)
+Mar-28 03:33:54.684 [main] DEBUG nextflow.Session - Session await > all processes finished
+Mar-28 03:33:54.694 [Task monitor] INFO  nextflow.script.BaseScript - [ERROR] Pipeline failed: Loading required package: Rcpp
+[INFO] Plate 16S-Plate1Pool-Rep1 : learning error rates from 75 samples
+67578592 total bases in 287367 reads from 75 samples will be used for learning the error rates.
+Error: Input sequences must all be longer than the kmer-size (5).
+Execution halted
+Mar-28 03:33:54.694 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Mar-28 03:33:54.696 [main] INFO  nextflow.script.BaseScript - Pipeline completed at : 2026-03-28T03:33:54.695899952-05:00
+Duration              : 30.2s
+Success               : false
+Exit status           : 1
+Output directory      : /data/microscape_v2/test_results_hybrid
+
+Mar-28 03:33:54.696 [main] INFO  nextflow.script.BaseScript - [WARNING] Pipeline completed with errors. Check .nextflow.log for details.
+Mar-28 03:33:54.699 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=97; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=5m 22s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=8; peakCpus=16; peakMemory=32 GB; ]
+Mar-28 03:33:54.699 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Mar-28 03:33:54.700 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Mar-28 03:33:54.743 [main] DEBUG nextflow.trace.ReportObserver - Execution report summary data:
+  [{"cpuUsage":{"mean":99.21,"min":50.55,"q1":61.94,"q2":74,"q3":132.14,"max":246.6,"minLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B05)","maxLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H12)","q1Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B08)","q2Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G04)","q3Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F10)"},"process":"DADA2_FILTER_TRIM","mem":{"mean":42601472,"min":18546688,"q1":35249152,"q2":43374592,"q3":52340736,"max":53600256,"minLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H11)","maxLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C02)","q1Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F10)","q2Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C04)","q3Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A02)"},"memUsage":{"mean":0.99,"min":0.43,"q1":0.82,"q2":1.01,"q3":1.22,"max":1.25,"minLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H11)","maxLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C02)","q1Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F10)","q2Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C04)","q3Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A02)"},"timeUsage":null,"vmem":{"mean":810298368,"min":73261056,"q1":818769920,"q2":829231104,"q3":839921664,"max":840978432,"minLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H11)","maxLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E08)","q1Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D07)","q2Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D08)","q3Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A05)"},"reads":{"mean":7174427.06,"min":6403800,"q1":6439199.25,"q2":7161647.5,"q3":7727660.5,"max":8598715,"minLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F12)","maxLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C02)","q1Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E10)","q2Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E04)","q3Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F03)"},"cpu":{"mean":198.42,"min":101.1,"q1":123.88,"q2":148,"q3":264.27,"max":493.2,"minLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B05)","maxLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H12)","q1Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B08)","q2Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G04)","q3Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F10)"},"time":{"mean":1132.76,"min":169,"q1":277.75,"q2":1151.5,"q3":1779.25,"max":2944,"minLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H12)","maxLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E01)","q1Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E11)","q2Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F04)","q3Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F03)"},"writes":{"mean":378527.26,"min":615,"q1":8729.5,"q2":359271,"q3":653837,"max":1070342,"minLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F12)","maxLabel":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C02)","q1Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H10)","q2Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E04)","q3Label":"DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F03)"}},{"cpuUsage":null,"process":"DADA2_LEARN_ERRORS","mem":null,"memUsage":null,"timeUsage":null,"vmem":null,"reads":null,"cpu":null,"time":{"mean":13095,"min":13095,"q1":13095,"q2":13095,"q3":13095,"max":13095,"minLabel":"DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)","maxLabel":"DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)","q1Label":"DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)","q2Label":"DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)","q3Label":"DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)"},"writes":null}]
+Mar-28 03:33:55.082 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Mar-28 03:33:55.144 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Mar-28 03:33:55.156 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

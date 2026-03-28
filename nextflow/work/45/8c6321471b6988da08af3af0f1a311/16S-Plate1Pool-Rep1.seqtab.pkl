@@ -1,0 +1,1 @@
+/data/microscape_v2/nextflow/work/1d/59683a433eff1a8e5aab8feffd437b/16S-Plate1Pool-Rep1.seqtab.pkl

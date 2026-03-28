@@ -1,0 +1,198 @@
+Mar-28 02:36:43.760 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --input /data/microscape_v2/test_data --skip_primer_removal --outdir /data/microscape_v2/test_results_py --lang python --dada_cpus 8 --min_samples 2 --min_seqs 3 --min_reads 100 --min_prevalence 3 --ref_databases 'silva:/matika/microscape/ref_dada2_silva_v138-2_train_set_uniq.fasta.gz:Domain,Phylum,Class,Order,Family,Genus' -c /dev/fd/63 -resume
+Mar-28 02:36:43.990 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 23.04.2
+Mar-28 02:36:44.058 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/usr/lib/ont-nextflow/plugins; core-plugins: nf-amazon@1.16.2,nf-azure@1.0.1,nf-codecommit@0.1.4,nf-console@1.0.5,nf-ga4gh@1.0.5,nf-google@1.7.3,nf-tower@1.5.12,nf-wave@0.8.3
+Mar-28 02:36:44.078 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Mar-28 02:36:44.079 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Mar-28 02:36:44.086 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Mar-28 02:36:44.109 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Mar-28 02:36:44.143 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /data/microscape_v2/nextflow/nextflow.config
+Mar-28 02:36:44.148 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /dev/fd/63
+Mar-28 02:36:44.149 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /data/microscape_v2/nextflow/nextflow.config
+Mar-28 02:36:44.149 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /dev/fd/63
+Mar-28 02:36:44.381 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Mar-28 02:36:54.756 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Mar-28 02:36:56.356 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declararion
+Mar-28 02:36:56.375 [main] INFO  nextflow.cli.CmdRun - Launching `main.nf` [gigantic_goodall] DSL2 - revision: b82296f3b4
+Mar-28 02:36:56.376 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Mar-28 02:36:56.376 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Mar-28 02:36:56.929 [main] DEBUG nextflow.secret.LocalSecretsProvider - Secrets store: /usr/lib/ont-nextflow/secrets/store.json
+Mar-28 02:36:56.935 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@373e6b9d] - activable => nextflow.secret.LocalSecretsProvider@373e6b9d
+Mar-28 02:36:57.891 [main] DEBUG nextflow.Session - Session UUID: 2580f209-888f-4eb6-ad8f-f9db43f73dca
+Mar-28 02:36:57.892 [main] DEBUG nextflow.Session - Run name: gigantic_goodall
+Mar-28 02:36:57.892 [main] DEBUG nextflow.Session - Executor pool size: 16
+Mar-28 02:36:59.226 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Mar-28 02:36:59.521 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 23.04.2 build 5871
+  Created: 08-06-2023 09:33 UTC (04:33 CDT)
+  System: Linux 5.15.0-139-generic
+  Runtime: Groovy 3.0.16 on OpenJDK 64-Bit Server VM 17.0.15+6-Ubuntu-0ubuntu120.04
+  Encoding: UTF-8 (UTF-8)
+  Process: 2715678@GXB04653 [127.0.0.1]
+  CPUs: 16 - Mem: 62.6 GB (546.9 MB) - Swap: 38.2 GB (0)
+Mar-28 02:36:59.563 [main] DEBUG nextflow.Session - Work-dir: /data/microscape_v2/nextflow/work [ext2/ext3]
+Mar-28 02:36:59.711 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[GoogleLifeSciencesExecutor, AwsBatchExecutor, GoogleBatchExecutor]
+Mar-28 02:37:00.626 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Mar-28 02:37:00.662 [main] DEBUG nextflow.Session - Observer factory: TowerFactory
+Mar-28 02:37:00.724 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Mar-28 02:37:00.763 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Mar-28 02:37:02.976 [main] DEBUG nextflow.Session - Session start
+Mar-28 02:37:03.033 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: /data/microscape_v2/test_results_py/pipeline_info/trace.txt
+Mar-28 02:37:04.109 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Mar-28 02:37:05.367 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_low` matches labels `process_low` for process with name DADA2_FILTER_TRIM
+Mar-28 02:37:05.371 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.371 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.376 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Mar-28 02:37:05.380 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=62.6 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Mar-28 02:37:05.464 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name DADA2_LEARN_ERRORS
+Mar-28 02:37:05.465 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.465 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.479 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name DADA2_DENOISE
+Mar-28 02:37:05.480 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.480 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.491 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name MERGE_SEQTABS
+Mar-28 02:37:05.493 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.493 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.499 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name REMOVE_CHIMERAS
+Mar-28 02:37:05.500 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.500 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.505 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name FILTER_SEQTAB
+Mar-28 02:37:05.506 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.506 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.513 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name ASSIGN_TAXONOMY
+Mar-28 02:37:05.513 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.513 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.525 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name RENORMALIZE
+Mar-28 02:37:05.526 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.526 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.532 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name CLUSTER_TSNE
+Mar-28 02:37:05.532 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.532 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.537 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_high` matches labels `process_high` for process with name NETWORK_SPARCC
+Mar-28 02:37:05.539 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.539 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.547 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:process_low` matches labels `process_low` for process with name BUILD_SHINY
+Mar-28 02:37:05.547 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-28 02:37:05.547 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-28 02:37:05.550 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: BUILD_PHYLOGENY, DADA2_LEARN_ERRORS, BUILD_SHINY, DADA2_DENOISE, RENORMALIZE, FILTER_SEQTAB, LOAD_METADATA, DADA2_FILTER_TRIM, CLUSTER_TSNE, REMOVE_CHIMERAS, NETWORK_SPARCC, ASSIGN_TAXONOMY, REMOVE_PRIMERS, DEMULTIPLEX, MERGE_SEQTABS
+Mar-28 02:37:05.552 [main] DEBUG nextflow.Session - Igniting dataflow network (14)
+Mar-28 02:37:05.557 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /data/microscape_v2/test_data/; pattern: *_R{1,2}*.fastq.gz; options: [:]
+Mar-28 02:37:05.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > DADA2_FILTER_TRIM
+Mar-28 02:37:05.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > DADA2_LEARN_ERRORS
+Mar-28 02:37:05.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > DADA2_DENOISE
+Mar-28 02:37:05.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > MERGE_SEQTABS
+Mar-28 02:37:05.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > REMOVE_CHIMERAS
+Mar-28 02:37:05.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > FILTER_SEQTAB
+Mar-28 02:37:05.559 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ASSIGN_TAXONOMY
+Mar-28 02:37:05.559 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > RENORMALIZE
+Mar-28 02:37:05.559 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > CLUSTER_TSNE
+Mar-28 02:37:05.559 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NETWORK_SPARCC
+Mar-28 02:37:05.559 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > BUILD_SHINY
+Mar-28 02:37:05.559 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Mar-28 02:37:05.559 [main] DEBUG nextflow.Session - Session await
+Mar-28 02:37:05.857 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [c2/6e059f] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D08)
+Mar-28 02:37:05.857 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [e4/6f14a5] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G08)
+Mar-28 02:37:05.857 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [fc/0f8764] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G07)
+Mar-28 02:37:05.857 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [6c/90fbd5] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D04)
+Mar-28 02:37:05.857 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [78/b49b2d] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B01)
+Mar-28 02:37:05.857 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [8d/a1d31e] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H07)
+Mar-28 02:37:05.857 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [31/0c3a98] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F12)
+Mar-28 02:37:05.857 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [68/b82c4d] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B02)
+Mar-28 02:37:05.857 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [a5/6c1a76] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F01)
+Mar-28 02:37:05.857 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [65/5d9627] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E05)
+Mar-28 02:37:05.858 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [c1/6f9645] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F03)
+Mar-28 02:37:05.858 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [53/fabb13] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B05)
+Mar-28 02:37:05.858 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [c1/47cf8a] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E07)
+Mar-28 02:37:05.858 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [a1/209e47] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G05)
+Mar-28 02:37:05.858 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [27/7d1530] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F07)
+Mar-28 02:37:05.863 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [4c/f51e4f] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H08)
+Mar-28 02:37:05.911 [Actor Thread 4] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Mar-28 02:37:05.927 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [28/19d1f4] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H09)
+Mar-28 02:37:05.928 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [a3/96c2f5] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C10)
+Mar-28 02:37:05.928 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [56/b405b8] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A07)
+Mar-28 02:37:05.934 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [d1/67aef8] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G11)
+Mar-28 02:37:05.934 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [09/f37dd3] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B09)
+Mar-28 02:37:05.934 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [cc/aad73a] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E03)
+Mar-28 02:37:05.935 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [b6/17f082] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F08)
+Mar-28 02:37:05.935 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [13/0213af] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D09)
+Mar-28 02:37:05.936 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [c0/8eb246] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F10)
+Mar-28 02:37:05.938 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [ba/7dd03c] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D11)
+Mar-28 02:37:05.938 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [ce/546de8] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D02)
+Mar-28 02:37:05.946 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [7e/0d4ea0] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C06)
+Mar-28 02:37:05.946 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [28/cc7980] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E01)
+Mar-28 02:37:05.947 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [73/081cf5] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H03)
+Mar-28 02:37:05.948 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [cb/6cdda9] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D05)
+Mar-28 02:37:05.949 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [cf/381bcb] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A12)
+Mar-28 02:37:05.949 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [3f/4467e6] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F04)
+Mar-28 02:37:05.951 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [67/e3eb20] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B10)
+Mar-28 02:37:05.951 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [6b/ae4189] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H01)
+Mar-28 02:37:05.952 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [fd/0a7df2] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E09)
+Mar-28 02:37:05.952 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [0d/4ebb7a] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D06)
+Mar-28 02:37:05.953 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [0d/7410f8] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G12)
+Mar-28 02:37:05.953 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [74/0a8450] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C04)
+Mar-28 02:37:05.955 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [93/ae2f03] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C01)
+Mar-28 02:37:05.956 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [51/b97fbf] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H12)
+Mar-28 02:37:05.957 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [b9/462f46] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D10)
+Mar-28 02:37:05.958 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [4f/93cbb8] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B11)
+Mar-28 02:37:05.960 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [44/a9b2e8] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C12)
+Mar-28 02:37:05.961 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [8d/bac80d] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E08)
+Mar-28 02:37:05.961 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [5f/5f95d9] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H06)
+Mar-28 02:37:05.962 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [56/299abb] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H05)
+Mar-28 02:37:05.963 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [f6/a6f371] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B07)
+Mar-28 02:37:05.966 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [a7/abdc95] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F06)
+Mar-28 02:37:05.968 [Actor Thread 21] INFO  nextflow.processor.TaskProcessor - [c1/64d554] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G10)
+Mar-28 02:37:05.970 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [07/1293c2] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H11)
+Mar-28 02:37:05.971 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [3f/9d8c5f] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A05)
+Mar-28 02:37:05.973 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [9d/659e38] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C09)
+Mar-28 02:37:05.975 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [8f/6d9d08] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D03)
+Mar-28 02:37:05.977 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [c6/109b27] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G03)
+Mar-28 02:37:05.978 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [9a/223a27] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E02)
+Mar-28 02:37:05.979 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [f1/d7e461] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C07)
+Mar-28 02:37:05.979 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [60/ba8d41] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B12)
+Mar-28 02:37:05.979 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [ee/95d4de] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B06)
+Mar-28 02:37:05.980 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [4f/36645a] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C11)
+Mar-28 02:37:05.983 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [a6/79d46a] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G09)
+Mar-28 02:37:05.984 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [c9/90d596] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A11)
+Mar-28 02:37:05.984 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [c6/8c335a] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H04)
+Mar-28 02:37:05.989 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [e1/843804] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C08)
+Mar-28 02:37:05.991 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [81/84059d] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B04)
+Mar-28 02:37:05.992 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [a1/daa202] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A04)
+Mar-28 02:37:05.993 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [ea/3993ce] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D07)
+Mar-28 02:37:05.993 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [88/abdf6b] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A06)
+Mar-28 02:37:05.996 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [98/82d849] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C03)
+Mar-28 02:37:05.996 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [02/cc2773] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A03)
+Mar-28 02:37:05.998 [Actor Thread 21] INFO  nextflow.processor.TaskProcessor - [d5/4b33ef] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A10)
+Mar-28 02:37:06.000 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [98/1f75b3] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D12)
+Mar-28 02:37:06.001 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [30/43c87d] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B03)
+Mar-28 02:37:06.002 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [e6/2582f0] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A02)
+Mar-28 02:37:06.003 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [89/9c4196] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F05)
+Mar-28 02:37:06.005 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [64/196963] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E06)
+Mar-28 02:37:06.009 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [f3/184f73] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E11)
+Mar-28 02:37:06.009 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [ef/2544a9] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F11)
+Mar-28 02:37:06.011 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [0f/505a1b] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G01)
+Mar-28 02:37:06.012 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [73/27b4d8] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C02)
+Mar-28 02:37:06.012 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [43/291809] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_D01)
+Mar-28 02:37:06.012 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [bb/5917eb] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A09)
+Mar-28 02:37:06.013 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [8b/111ef9] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H02)
+Mar-28 02:37:06.014 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [15/8022d1] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E10)
+Mar-28 02:37:06.014 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [5d/f781d5] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_H10)
+Mar-28 02:37:06.015 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [42/b8d525] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_B08)
+Mar-28 02:37:06.016 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [44/6f9404] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E04)
+Mar-28 02:37:06.016 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [48/cfa8ed] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A08)
+Mar-28 02:37:06.017 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [ee/bd2063] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_E12)
+Mar-28 02:37:06.018 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [7c/498a08] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G04)
+Mar-28 02:37:06.032 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [f3/4eb5c3] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_C05)
+Mar-28 02:37:06.032 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [c2/6d0329] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F02)
+Mar-28 02:37:06.033 [Actor Thread 21] INFO  nextflow.processor.TaskProcessor - [2b/ba295f] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_F09)
+Mar-28 02:37:06.033 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [68/bdfcc0] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G02)
+Mar-28 02:37:06.034 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [02/42f17b] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_A01)
+Mar-28 02:37:06.041 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [38/f5ad7a] Cached process > DADA2_FILTER_TRIM (16S-Plate1Pool-Rep1_G06)
+Mar-28 02:37:06.095 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [99/9a7498] Cached process > DADA2_LEARN_ERRORS (16S-Plate1Pool-Rep1)
+Mar-28 02:37:06.132 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [71/6af3d1] Cached process > DADA2_DENOISE (16S-Plate1Pool-Rep1)
+Mar-28 02:37:06.147 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [69/a3d3fc] Cached process > MERGE_SEQTABS (merge-all)
+Mar-28 02:37:06.162 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [b2/2d304f] Cached process > REMOVE_CHIMERAS (chimera-removal)
+Mar-28 02:37:06.201 [Actor Thread 21] INFO  nextflow.processor.TaskProcessor - [15/9a5ca7] Cached process > FILTER_SEQTAB (filter-qc)
+Mar-28 02:37:06.281 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 02:37:06.283 [Task submitter] INFO  nextflow.Session - [dc/c1a698] Submitted process > CLUSTER_TSNE (tsne)
+Mar-28 02:37:06.296 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-28 02:37:06.296 [Task submitter] INFO  nextflow.Session - [bf/e64207] Submitted process > ASSIGN_TAXONOMY (silva)
+Mar-28 02:37:08.185 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 103; name: CLUSTER_TSNE (tsne); status: COMPLETED; exit: 0; error: -; workDir: /data/microscape_v2/nextflow/work/dc/c1a6984e8c556523d007321563d9bb]

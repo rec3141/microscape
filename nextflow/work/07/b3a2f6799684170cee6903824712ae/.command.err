@@ -1,0 +1,7 @@
+[INFO] Processed 100000/410793 references
+[INFO] Processed 200000/410793 references
+[INFO] Processed 300000/410793 references
+[INFO] Processed 400000/410793 references
+[INFO] Reference kmer table built (5129 genera x 65536 kmers = 1344.5 MB)
+[INFO] Classifying 42 query sequences...
+[INFO] Taxonomy classification complete.

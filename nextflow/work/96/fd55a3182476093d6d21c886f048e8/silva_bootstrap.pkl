@@ -1,0 +1,1 @@
+/data/microscape_v2/nextflow/work/07/b3a2f6799684170cee6903824712ae/silva_bootstrap.pkl

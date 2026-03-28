@@ -1,0 +1,2 @@
+step	input_asvs	pre_filtered	chimeras	output_asvs	samples	total_reads	pct_retained
+chimera_removal	88	0	3	85	62	48304	99.8

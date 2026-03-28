@@ -1,0 +1,4 @@
+[INFO] Found 1 sequence tables to merge
+  16S-Plate1Pool-Rep1.seqtab.pkl -> 62 samples, 88 ASVs, 48391 reads
+[INFO] Concatenating long tables...
+[INFO] Merged total: 62 samples, 88 unique ASVs, 48391 reads, 272 non-zero entries

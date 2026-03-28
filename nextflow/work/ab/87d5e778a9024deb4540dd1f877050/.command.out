@@ -1,0 +1,6 @@
+[INFO] Input: 62 samples, 88 ASVs, 48391 reads, 272 non-zero entries
+[INFO] Chimera input: 88 ASVs, 272 non-zero entries
+[INFO] Checking 88 ASVs for chimeras using 8 cores
+[INFO] Flagged 3 chimeras out of 88 ASVs
+[INFO] Removed 3 chimeras + 0 pre-filtered = 3 total
+[INFO] Retained 99.8 % of reads ( 85 ASVs across 62 samples)

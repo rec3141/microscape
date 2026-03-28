@@ -1,0 +1,22 @@
+[INFO] Loading count data from seqtab_final.pkl
+[INFO] Count table: 218 rows, 57 samples, 42 ASVs
+[INFO] Loading taxonomy from silva_taxonomy.pkl
+[INFO] Taxonomy table: 42 sequences, columns: ['Domain', 'Phylum', 'Class', 'Order', 'Family', 'Genus']
+[INFO] Taxonomy columns — Domain: Domain, Order: Order, Family: Family
+[INFO] Group assignments:
+[INFO]   prokaryote: 30 ASVs
+[INFO]   eukaryote: 5 ASVs
+[INFO]   mitochondria: 4 ASVs
+[INFO]   chloroplast: 3 ASVs
+[INFO] Computing within-group proportions ...
+[INFO] Group 'chloroplast': 16 rows, 16 samples, 3 ASVs
+[INFO] Group 'eukaryote': 10 rows, 9 samples, 5 ASVs
+[INFO] Group 'mitochondria': 11 rows, 11 samples, 4 ASVs
+[INFO] Group 'prokaryote': 181 rows, 53 samples, 30 ASVs
+[INFO] Saved renorm_by_group.pkl
+[INFO] Saved renorm_merged.pkl
+[INFO] Saved renorm_table_list.pkl
+[INFO] Saved renorm_stats.tsv
+[INFO] Renormalization complete in 0.0s
+[INFO] Total reads: 45,511
+[INFO] Groups: chloroplast, eukaryote, mitochondria, prokaryote

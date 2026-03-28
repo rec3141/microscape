@@ -1,0 +1,7 @@
+[INFO] Loading renormalized data from renorm_merged.pkl
+[INFO] Loaded DataFrame with 218 rows
+[INFO] Pivoting to wide format
+[INFO] Count matrix: 57 samples x 42 ASVs
+[INFO] Prevalence filter (>= 3.0): keeping 0/42 ASVs
+[ERROR] Fewer than 2 ASVs pass the prevalence filter. Cannot compute correlations.
+[INFO] Saved empty outputs (insufficient ASVs)
