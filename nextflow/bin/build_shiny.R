@@ -60,11 +60,19 @@ dt_renorm <- readRDS(renorm_path)
 if (!is.data.table(dt_renorm)) dt_renorm <- as.data.table(dt_renorm)
 cat("[INFO] Renorm:", nrow(dt_renorm), "rows\n")
 
-# Taxonomy: load all *_taxonomy.rds files from the taxonomy directory
-tax_files <- list.files(taxonomy_dir, pattern = "_taxonomy\\.rds$",
-                        full.names = TRUE)
+# Taxonomy: find *_taxonomy.rds files
+# taxonomy_dir can be a directory OR a space-separated list of staged files
+# (Nextflow stages collected files flat in the work directory)
+if (file.info(taxonomy_dir)$isdir %in% TRUE) {
+    tax_files <- list.files(taxonomy_dir, pattern = "_taxonomy\\.rds$",
+                            full.names = TRUE)
+} else {
+    # Files staged flat — search the working directory
+    tax_files <- list.files(".", pattern = "_taxonomy\\.rds$",
+                            full.names = TRUE)
+}
 if (length(tax_files) == 0) {
-    stop("[ERROR] No taxonomy files found in: ", taxonomy_dir)
+    stop("[ERROR] No taxonomy files found")
 }
 taxonomy <- list()
 for (tf in tax_files) {
@@ -74,12 +82,20 @@ for (tf in tax_files) {
         "sequences,", ncol(taxonomy[[db_name]]), "ranks\n")
 }
 
-# Metadata
-metadata <- readRDS(metadata_path)
-if (!is.data.frame(metadata)) {
-    metadata <- as.data.frame(metadata)
+# Metadata (optional — may be NO_METADATA placeholder)
+if (file.exists(metadata_path) && metadata_path != "NO_METADATA") {
+    metadata <- readRDS(metadata_path)
+    if (!is.data.frame(metadata)) metadata <- as.data.frame(metadata)
+    cat("[INFO] Metadata:", nrow(metadata), "rows,", ncol(metadata), "columns\n")
+} else {
+    cat("[INFO] No metadata provided, creating minimal metadata\n")
+    samples <- unique(dt_raw$sample)
+    metadata <- data.frame(
+        sample_name = samples,
+        row.names = samples,
+        stringsAsFactors = FALSE
+    )
 }
-cat("[INFO] Metadata:", nrow(metadata), "rows,", ncol(metadata), "columns\n")
 
 # Sample t-SNE coordinates
 sample_tsne_raw <- readRDS(sample_tsne_path)

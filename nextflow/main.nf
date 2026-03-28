@@ -162,17 +162,23 @@ workflow {
             }
     }
 
-    // 3. Remove primers with cutadapt
-    REMOVE_PRIMERS(ch_demuxed)
-
-    // 4. DADA2 processing — group by plate for error learning
-    //    Plate is extracted from the sample ID (first field before _)
-    ch_trimmed = REMOVE_PRIMERS.out.reads
-        .map { meta, r1, r2 ->
-            def plate = meta.id.split('_')[0]
-            def new_meta = meta + [plate: plate]
-            [new_meta, r1, r2]
-        }
+    // 3. Remove primers with cutadapt (skip if input is already trimmed)
+    if (params.skip_primer_removal) {
+        ch_trimmed = ch_demuxed
+            .map { meta, r1, r2 ->
+                def plate = meta.id.split('_')[0]
+                def new_meta = meta + [plate: plate]
+                [new_meta, r1, r2]
+            }
+    } else {
+        REMOVE_PRIMERS(ch_demuxed)
+        ch_trimmed = REMOVE_PRIMERS.out.reads
+            .map { meta, r1, r2 ->
+                def plate = meta.id.split('_')[0]
+                def new_meta = meta + [plate: plate]
+                [new_meta, r1, r2]
+            }
+    }
 
     // 4a. Filter and trim per-sample
     DADA2_FILTER_TRIM(ch_trimmed)
