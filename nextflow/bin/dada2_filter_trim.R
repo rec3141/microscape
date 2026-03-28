@@ -53,25 +53,37 @@ trunc_len <- if (trunc_fwd > 0 && trunc_rev > 0) {
 cat("[INFO]", sample_id, ": filtering with maxEE=", max_ee,
     "truncQ=", trunc_q, "truncLen=", paste(trunc_len, collapse = ","), "\n")
 
-fto <- filterAndTrim(
-    fwd      = r1_in,  filt     = r1_out,
-    rev      = r2_in,  filt.rev = r2_out,
-    maxEE    = max_ee,
-    truncQ   = trunc_q,
-    maxN     = max_n,
-    truncLen = trunc_len,
-    rm.phix  = TRUE,
-    compress = TRUE,
-    verbose  = TRUE,
-    multithread = cpus
+fto <- withCallingHandlers(
+    filterAndTrim(
+        fwd      = r1_in,  filt     = r1_out,
+        rev      = r2_in,  filt.rev = r2_out,
+        maxEE    = max_ee,
+        truncQ   = trunc_q,
+        maxN     = max_n,
+        truncLen = trunc_len,
+        rm.phix  = TRUE,
+        compress = TRUE,
+        verbose  = TRUE,
+        multithread = cpus
+    ),
+    warning = function(w) {
+        cat("[WARNING]", sample_id, ":", conditionMessage(w), "\n")
+        invokeRestart("muffleWarning")
+    }
 )
 
-# ---------------------------------------------------------------------------
-# Write per-sample stats
-# ---------------------------------------------------------------------------
-reads_in  <- fto[1, 1]
-reads_out <- fto[1, 2]
+# Handle samples where all reads were filtered out
+reads_in  <- if (nrow(fto) > 0) fto[1, 1] else 0
+reads_out <- if (nrow(fto) > 0) fto[1, 2] else 0
 pct       <- round(reads_out / max(reads_in, 1) * 100, 1)
+
+# Create empty output files if filtering removed everything
+# (downstream steps filter these out by file size)
+if (reads_out == 0) {
+    cat("[WARNING]", sample_id, ": no reads passed filter, creating empty outputs\n")
+    file.create(r1_out)
+    file.create(r2_out)
+}
 
 stats <- data.frame(
     sample       = sample_id,
