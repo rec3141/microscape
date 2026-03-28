@@ -3,7 +3,7 @@
   import createScatterplot from 'regl-scatterplot';
   import {
     samples, asvs, counts,
-    selectedSample, countsBySample,
+    selectedSample, setSelectedSample, countsBySample,
     GROUP_COLORS, GROUP_HEX,
   } from '../stores/data.js';
 
@@ -134,7 +134,7 @@
       sp.subscribe('select', ({ points: indices }) => {
         if (indices.length > 0) {
           const sIdx = samples.indexOf(filteredSamples[indices[0]]);
-          selectedSample = sIdx >= 0 ? sIdx : null;
+          setSelectedSample(sIdx >= 0 ? sIdx : null);
         }
       });
 
@@ -245,7 +245,7 @@
           </h3>
           <button
             class="text-xs text-slate-500 hover:text-slate-300"
-            onclick={() => (selectedSample = null)}
+            onclick={() => setSelectedSample(null)}
           >Close</button>
         </div>
 

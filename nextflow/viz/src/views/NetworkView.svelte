@@ -3,7 +3,7 @@
   import createScatterplot from 'regl-scatterplot';
   import {
     asvs, network, counts,
-    selectedAsv, countsByAsv,
+    selectedAsv, setSelectedAsv, countsByAsv,
     GROUP_COLORS, GROUP_HEX,
   } from '../stores/data.js';
 
@@ -99,7 +99,7 @@
       sp.subscribe('select', ({ points: indices }) => {
         if (indices.length > 0) {
           const oi = asvs.indexOf(filteredAsvs[indices[0]]);
-          selectedAsv = oi >= 0 ? oi : null;
+          setSelectedAsv(oi >= 0 ? oi : null);
         }
       });
 
@@ -258,7 +258,7 @@
           </h3>
           <button
             class="text-xs text-slate-500 hover:text-slate-300"
-            onclick={() => (selectedAsv = null)}
+            onclick={() => setSelectedAsv(null)}
           >Close</button>
         </div>
         <p class="mt-1 text-xs text-slate-400">{selectedAsvObj.taxonomy ?? 'No taxonomy'}</p>
