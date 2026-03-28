@@ -27,6 +27,9 @@ dependencies:
   - r-plotly
   - r-dt
   - r-htmlwidgets
-  # SpiecEasi not in conda — install after env creation
-  # R -e "devtools::install_github('zdk123/SpiecEasi')"
+  # SpiecEasi dependency
+  - bioconductor-phyloseq
+  # Build tools for installing SpiecEasi from GitHub
   - r-devtools
+  - r-remotes
+  - compilers

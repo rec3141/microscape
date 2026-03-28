@@ -112,6 +112,14 @@ if (is.matrix(sample_tsne_raw)) {
     )
 } else {
     sample_tsne <- as.data.frame(sample_tsne_raw)
+    # Map known column names to x, y, sample
+    if ("tSNE1" %in% names(sample_tsne)) {
+        sample_tsne$x <- sample_tsne$tSNE1
+        sample_tsne$y <- sample_tsne$tSNE2
+    }
+    if ("label" %in% names(sample_tsne) && !"sample" %in% names(sample_tsne)) {
+        sample_tsne$sample <- sample_tsne$label
+    }
     if (!"sample" %in% names(sample_tsne)) {
         if (!is.null(rownames(sample_tsne))) {
             sample_tsne$sample <- rownames(sample_tsne)
@@ -119,10 +127,11 @@ if (is.matrix(sample_tsne_raw)) {
             sample_tsne$sample <- paste0("S", seq_len(nrow(sample_tsne)))
         }
     }
-    # Normalize column names
     if (!"x" %in% names(sample_tsne)) {
         names(sample_tsne)[1:2] <- c("x", "y")
     }
+    # Keep only the columns we need
+    sample_tsne <- sample_tsne[, c("x", "y", "sample")]
 }
 cat("[INFO] Sample t-SNE:", nrow(sample_tsne), "points\n")
 
@@ -141,6 +150,14 @@ if (is.matrix(seq_tsne_raw)) {
     )
 } else {
     seq_tsne <- as.data.frame(seq_tsne_raw)
+    # Map known column names
+    if ("tSNE1" %in% names(seq_tsne)) {
+        seq_tsne$x <- seq_tsne$tSNE1
+        seq_tsne$y <- seq_tsne$tSNE2
+    }
+    if ("label" %in% names(seq_tsne) && !"sequence" %in% names(seq_tsne)) {
+        seq_tsne$sequence <- seq_tsne$label
+    }
     if (!"sequence" %in% names(seq_tsne)) {
         if (!is.null(rownames(seq_tsne))) {
             seq_tsne$sequence <- rownames(seq_tsne)
@@ -151,6 +168,7 @@ if (is.matrix(seq_tsne_raw)) {
     if (!"x" %in% names(seq_tsne)) {
         names(seq_tsne)[1:2] <- c("x", "y")
     }
+    seq_tsne <- seq_tsne[, c("x", "y", "sequence")]
 }
 cat("[INFO] Sequence t-SNE:", nrow(seq_tsne), "points\n")
 

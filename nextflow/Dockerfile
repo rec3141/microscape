@@ -30,8 +30,10 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
     && mamba clean -afy
 
 # Install SpiecEasi from GitHub (not available in conda)
-RUN /opt/conda/envs/microscape-r/bin/R -e \
-    "devtools::install_github('zdk123/SpiecEasi', upgrade='never', quiet=TRUE)"
+# Install SpiecEasi from GitHub (not in conda, pin to v1.1.1 for R<4.5 compat)
+RUN PATH="/opt/conda/envs/microscape-r/bin:$PATH" \
+    /opt/conda/envs/microscape-r/bin/R -e \
+    "remotes::install_github('zdk123/SpiecEasi@v1.1.1', upgrade='never', quiet=TRUE)"
 
 # Create wrapper scripts so tools are on PATH without conda activate
 RUN mkdir -p /usr/local/bin/microscape-python /usr/local/bin/microscape-r \
