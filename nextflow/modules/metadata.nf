@@ -1,25 +1,28 @@
 // Load sample metadata and merge with sequence data.
-//
-// Reads a MIMARKS-compliant (or custom) TSV/CSV metadata file and matches
-// its rows to sample IDs in the pipeline's sequence table. Produces a
-// merged metadata object and matching statistics for QC review.
+
+def metaExt() { return params.lang == 'python' ? 'pkl' : 'rds' }
 
 process LOAD_METADATA {
     tag "metadata"
     label 'process_low'
-    conda "${projectDir}/conda-envs/microscape-r"
+    conda params.lang == 'python' ? "${projectDir}/conda-envs/microscape-python" : "${projectDir}/conda-envs/microscape-r"
 
     input:
-    path(seqtab_rds)
+    path(seqtab)
     path(metadata_file)
     val(sample_id_column)
 
     output:
-    path("metadata.rds"), emit: metadata
+    path("metadata.${metaExt()}"), emit: metadata
     path("match_stats.tsv"), emit: stats
 
     script:
+    if (params.lang == 'python')
     """
-    load_metadata.R "${seqtab_rds}" "${metadata_file}" "${sample_id_column}"
+    load_metadata.py "${seqtab}" "${metadata_file}" "${sample_id_column}"
+    """
+    else
+    """
+    load_metadata.R "${seqtab}" "${metadata_file}" "${sample_id_column}"
     """
 }

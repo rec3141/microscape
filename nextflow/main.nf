@@ -125,7 +125,7 @@ include { RENORMALIZE }       from './modules/renormalize'
 include { LOAD_METADATA }     from './modules/metadata'
 include { CLUSTER_TSNE }      from './modules/cluster'
 include { NETWORK_SPARCC }    from './modules/network'
-include { BUILD_SHINY }       from './modules/shiny'
+include { BUILD_VIZ }         from './modules/shiny'
 
 // ============================================================================
 // Main workflow
@@ -280,7 +280,7 @@ workflow {
             .flatten()
             .collect()
 
-        BUILD_SHINY(
+        BUILD_VIZ(
             FILTER_SEQTAB.out.seqtab,
             RENORMALIZE.out.merged,
             ch_tax_files,
