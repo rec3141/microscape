@@ -219,8 +219,18 @@ workflow {
     ch_all_seqtabs = DADA2_DENOISE.out.seqtab.map { meta, rds -> rds }.collect()
 
     MERGE_SEQTABS(ch_all_seqtabs)
-    REMOVE_CHIMERAS(MERGE_SEQTABS.out.seqtab)
-    FILTER_SEQTAB(REMOVE_CHIMERAS.out.seqtab)
+
+    // Per-plate chimera removal already happens in DADA2_DENOISE (both R and Python).
+    // Post-merge chimera pass catches cross-plate chimeras but is optional when
+    // using R dada2 (which has thorough per-plate removal). Skip when dada_engine=R
+    // to avoid false positives from the Python sparse reimplementation.
+    def effectiveEngine = params.dada_engine ?: (params.lang == 'python' ? 'R' : params.lang)
+    if (effectiveEngine == 'python') {
+        REMOVE_CHIMERAS(MERGE_SEQTABS.out.seqtab)
+        FILTER_SEQTAB(REMOVE_CHIMERAS.out.seqtab)
+    } else {
+        FILTER_SEQTAB(MERGE_SEQTABS.out.seqtab)
+    }
 
     // ======================================================================
     // Stage B: Taxonomy, phylogeny, renormalization
