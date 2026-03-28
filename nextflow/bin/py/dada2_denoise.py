@@ -60,19 +60,16 @@ with open(errR_path, "rb") as f:
 fwd_files = sorted(glob.glob("*_R1.filt.fastq.gz"))
 rev_files = sorted(glob.glob("*_R2.filt.fastq.gz"))
 
-# Remove empty/missing files
-def filter_valid(files, min_size=20):
-    valid = []
-    for f in files:
-        try:
-            if os.path.getsize(f) > min_size:
-                valid.append(f)
-        except OSError:
-            pass
-    return valid
+# Remove empty/missing files (keep pairs aligned)
+valid_pairs = []
+for f, r in zip(fwd_files, rev_files):
+    f_ok = os.path.exists(f) and os.path.getsize(f) > 100
+    r_ok = os.path.exists(r) and os.path.getsize(r) > 100
+    if f_ok and r_ok:
+        valid_pairs.append((f, r))
 
-fwd_files = filter_valid(fwd_files)
-rev_files = filter_valid(rev_files)
+fwd_files = [p[0] for p in valid_pairs]
+rev_files = [p[1] for p in valid_pairs]
 
 # Derive sample names by stripping the _R1.filt.fastq.gz suffix
 sample_names = [re.sub(r"_R1\.filt\.fastq\.gz$", "", os.path.basename(f))

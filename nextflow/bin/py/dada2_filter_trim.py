@@ -16,6 +16,7 @@
 #   <sample_id>_filt_stats.tsv      Filtering statistics
 
 import sys
+import os
 import gzip
 import math
 from Bio import SeqIO
@@ -92,8 +93,9 @@ def filter_read(record, max_n_val, max_ee_val, trunc_q_val, trunc_len):
             return None  # too short after quality truncation
         rec = rec[:trunc_len]
 
-    # Reject empty reads
-    if len(rec) == 0:
+    # Reject reads too short for kmer-based processing
+    # R's filterAndTrim uses minLen=20 by default
+    if len(rec) < 20:
         return None
 
     # Reject reads with too many Ns
@@ -149,8 +151,15 @@ finally:
     rev_out_handle.close()
 
 # Handle samples where all reads were filtered out
+# Match R's filterAndTrim behavior: remove output files and recreate as 0-byte
+# so downstream steps can detect by file size (>20 bytes = has reads)
 if reads_out == 0:
-    print(f"[WARNING] {sample_id} : no reads passed filter, creating empty outputs")
+    print(f"[WARNING] {sample_id} : no reads passed filter")
+    os.remove(r1_out)
+    os.remove(r2_out)
+    # Create 0-byte files (Nextflow requires declared outputs to exist)
+    open(r1_out, 'w').close()
+    open(r2_out, 'w').close()
 
 pct = round(reads_out / max(reads_in, 1) * 100, 1)
 

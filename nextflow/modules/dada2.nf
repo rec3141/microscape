@@ -1,14 +1,21 @@
 // DADA2 amplicon denoising processes.
 //
 // Three-step DADA2 workflow:
-//   1. DADA2_FILTER_TRIM   — per-sample quality filtering
-//   2. DADA2_LEARN_ERRORS  — per-plate error model learning
-//   3. DADA2_DENOISE       — per-plate denoising + pair merging → sequence table
+//   1. DADA2_FILTER_TRIM   — per-sample quality filtering (uses --lang)
+//   2. DADA2_LEARN_ERRORS  — per-plate error model learning (uses --dada_engine)
+//   3. DADA2_DENOISE       — per-plate denoising + pair merging (uses --dada_engine)
 //
-// Supports --lang R (default) or --lang python (uses dada2gpu with GPU support).
-// Error models are learned per plate because PCR history affects error rates.
+// --dada_engine controls which DADA2 implementation to use:
+//   'R' (default) = R dada2 package (reference implementation)
+//   'python' = dada2gpu (GPU-accelerated, standalone C library)
+//
+// --lang controls filter_trim and downstream scripts independently.
 
-def errExt() { return params.lang == 'python' ? 'pkl' : 'rds' }
+// Resolve effective DADA2 engine: explicit param > lang fallback > 'R' default
+def dadaEngine() { return params.dada_engine ?: (params.lang == 'python' ? 'R' : params.lang) }
+
+// Output extensions: dada2 steps always output .rds when engine=R
+def errExt() { return dadaEngine() == 'python' ? 'pkl' : 'rds' }
 def seqExt() { return params.lang == 'python' ? 'pkl' : 'rds' }
 
 process DADA2_FILTER_TRIM {
@@ -44,11 +51,11 @@ process DADA2_FILTER_TRIM {
     """
 }
 
-// Learn error rates from filtered FASTQ files grouped by plate.
+// Learn error rates — uses dada_engine (R or python/dada2gpu)
 process DADA2_LEARN_ERRORS {
     tag "${meta.id}"
     label 'process_high'
-    conda params.lang == 'python' ? "${projectDir}/conda-envs/microscape-python" : "${projectDir}/conda-envs/microscape-r"
+    conda dadaEngine() == 'python' ? "${projectDir}/conda-envs/microscape-python" : "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/error_models", mode: 'copy', enabled: !params.store_dir
     storeDir params.store_dir ? "${params.store_dir}/error_models" : null
 
@@ -60,7 +67,7 @@ process DADA2_LEARN_ERRORS {
     path("${meta.id}_error_rates.pdf"), emit: error_plots
 
     script:
-    if (params.lang == 'python')
+    if (dadaEngine() == 'python')
     """
     PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
     dada2_learn_errors.py "${meta.id}" ${task.cpus}
@@ -71,11 +78,12 @@ process DADA2_LEARN_ERRORS {
     """
 }
 
-// Per-plate denoising: dereplicate, denoise, merge pairs, build sequence table.
+// Per-plate denoising — uses dada_engine (R or python/dada2gpu)
+// Output is always .pkl when lang=python (converted from .rds by wrapper if needed)
 process DADA2_DENOISE {
     tag "${meta.id}"
     label 'process_high'
-    conda params.lang == 'python' ? "${projectDir}/conda-envs/microscape-python" : "${projectDir}/conda-envs/microscape-r"
+    conda dadaEngine() == 'python' ? "${projectDir}/conda-envs/microscape-python" : "${projectDir}/conda-envs/microscape-r"
     publishDir "${params.outdir}/seqtabs", mode: 'copy', enabled: !params.store_dir
     storeDir params.store_dir ? "${params.store_dir}/seqtabs" : null
 
@@ -87,12 +95,21 @@ process DADA2_DENOISE {
     path("${meta.id}.seqtab.tsv"), emit: seqtab_tsv
 
     script:
-    if (params.lang == 'python')
+    if (dadaEngine() == 'python')
     """
     PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
     dada2_denoise.py \
         "${meta.id}" "${errF}" "${errR}" \
         ${params.min_overlap} ${task.cpus}
+    """
+    else if (params.lang == 'python')
+    // R dada2 engine but Python downstream: run R, then convert .rds to .pkl
+    """
+    dada2_denoise.R \
+        "${meta.id}" "${errF}" "${errR}" \
+        ${params.min_overlap} ${task.cpus}
+
+    rds_to_pkl.py "${meta.id}.seqtab.rds" "${meta.id}.seqtab.pkl"
     """
     else
     """

@@ -65,8 +65,18 @@ def filter_valid(files, min_size=100):
             pass
     return valid
 
-fwd_files = filter_valid(fwd_files)
-rev_files = filter_valid(rev_files)
+# Filter paired: both fwd and rev must be valid for a sample to be included
+valid_pairs = []
+for f, r in zip(fwd_files, rev_files):
+    f_ok = os.path.getsize(f) > 100 if os.path.exists(f) else False
+    r_ok = os.path.getsize(r) > 100 if os.path.exists(r) else False
+    if f_ok and r_ok:
+        valid_pairs.append((f, r))
+    else:
+        print(f"[WARNING] Skipping empty pair: {os.path.basename(f)}")
+
+fwd_files = [p[0] for p in valid_pairs]
+rev_files = [p[1] for p in valid_pairs]
 
 if len(fwd_files) == 0:
     print(f"[ERROR] No valid filtered FASTQ files found for plate {plate_id}",
