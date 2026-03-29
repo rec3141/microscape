@@ -144,12 +144,11 @@ for lev in range(nlevel):
 print(f"[INFO] Running C-level taxonomy classifier (k=8, {cpus} threads)...")
 
 # Import after setting OMP_NUM_THREADS
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..", "dada2_gpu"))
 try:
-    from dada2gpu._cdada import run_taxonomy
+    from py._cdada import run_taxonomy
 except ImportError:
     # Try with PYTHONPATH
-    from dada2gpu._cdada import run_taxonomy
+    from py._cdada import run_taxonomy
 
 result = run_taxonomy(
     seqs=seqs,

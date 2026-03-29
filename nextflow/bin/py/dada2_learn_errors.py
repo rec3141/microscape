@@ -2,7 +2,7 @@
 #
 # dada2_learn_errors.py — Learn error rates from filtered reads (per plate)
 #
-# Python mirror of dada2_learn_errors.R. Uses dada2gpu.learn_errors() to
+# Python mirror of dada2_learn_errors.R. Uses dada2py.learn_errors() to
 # learn per-plate error models from filtered FASTQ files. Saves error
 # matrices as pickle files and generates diagnostic error-rate plots.
 #
@@ -24,8 +24,7 @@ import glob
 import pickle
 import numpy as np
 
-sys.path.insert(0, "/data/dada2_gpu")
-import dada2gpu
+import py as dada2py
 
 import matplotlib
 matplotlib.use("Agg")
@@ -89,7 +88,7 @@ print(f"[INFO] Plate {plate_id} : learning error rates from "
 # ---------------------------------------------------------------------------
 # Learn error models
 #
-# dada2gpu.learn_errors() pools quality-score information across all input
+# dada2py.learn_errors() pools quality-score information across all input
 # files and fits a parametric error model. Returns a 16 x ncol numpy array
 # representing transition probabilities for each quality score.
 # ---------------------------------------------------------------------------
@@ -100,8 +99,8 @@ nbases = float(os.environ.get("DADA2_NBASES", "1e7"))
 print(f"[INFO] Using {nbases:.0e} bases for error learning "
       f"({len(fwd_files)} fwd + {len(rev_files)} rev files available)")
 
-errF = dada2gpu.learn_errors(fwd_files, nbases=nbases)
-errR = dada2gpu.learn_errors(rev_files, nbases=nbases)
+errF = dada2py.learn_errors(fwd_files, nbases=nbases)
+errR = dada2py.learn_errors(rev_files, nbases=nbases)
 
 with open(f"{plate_id}_errF.pkl", "wb") as f:
     pickle.dump(errF, f)

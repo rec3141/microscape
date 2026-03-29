@@ -74,7 +74,7 @@ def helpMessage() {
 
     Language:
       --lang STR           'R' or 'python' [default: R]
-      --dada2gpu_path PATH Path to python-dada2 installation [default: /data/dada2_gpu]
+      --dada2_path PATH Path to dada2 Python package (rec3141/dada2 gpu-python branch) [default: none]
 
     Resources:
       --threads N          General thread count [default: 8]

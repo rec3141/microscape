@@ -7,7 +7,7 @@
 //
 // --dada_engine controls which DADA2 implementation to use:
 //   'R' (default) = R dada2 package (reference implementation)
-//   'python' = dada2gpu (GPU-accelerated, standalone C library)
+//   'python' = dada2 py (GPU-accelerated, standalone C library)
 //
 // --lang controls filter_trim and downstream scripts independently.
 
@@ -34,7 +34,7 @@ process DADA2_FILTER_TRIM {
     script:
     if (params.lang == 'python')
     """
-    PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
+    PYTHONPATH=${params.dada2_path}:\${PYTHONPATH:-} \
     dada2_filter_trim.py \
         "${meta.id}" "${r1}" "${r2}" \
         ${params.maxEE} ${params.truncQ} ${params.maxN} \
@@ -51,7 +51,7 @@ process DADA2_FILTER_TRIM {
     """
 }
 
-// Learn error rates — uses dada_engine (R or python/dada2gpu)
+// Learn error rates — uses dada_engine (R or python/dada2 py)
 process DADA2_LEARN_ERRORS {
     tag "${meta.id}"
     label 'process_high'
@@ -69,7 +69,7 @@ process DADA2_LEARN_ERRORS {
     script:
     if (dadaEngine() == 'python')
     """
-    PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
+    PYTHONPATH=${params.dada2_path}:\${PYTHONPATH:-} \
     dada2_learn_errors.py "${meta.id}" ${task.cpus}
     """
     else
@@ -78,7 +78,7 @@ process DADA2_LEARN_ERRORS {
     """
 }
 
-// Per-plate denoising — uses dada_engine (R or python/dada2gpu)
+// Per-plate denoising — uses dada_engine (R or python/dada2 py)
 // Output is always .pkl when lang=python (converted from .rds by wrapper if needed)
 process DADA2_DENOISE {
     tag "${meta.id}"
@@ -97,7 +97,7 @@ process DADA2_DENOISE {
     script:
     if (dadaEngine() == 'python')
     """
-    PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
+    PYTHONPATH=${params.dada2_path}:\${PYTHONPATH:-} \
     dada2_denoise.py \
         "${meta.id}" "${errF}" "${errR}" \
         ${params.min_overlap} ${task.cpus}

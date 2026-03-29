@@ -25,7 +25,7 @@ process ASSIGN_TAXONOMY {
     def levels_arg = tax_levels ? "\"${tax_levels}\"" : "null"
     if (params.lang == 'python')
     """
-    PYTHONPATH=${params.dada2gpu_path}:\${PYTHONPATH:-} \
+    PYTHONPATH=${params.dada2_path}:\${PYTHONPATH:-} \
     assign_taxonomy.py \
         "${seqtab}" "${ref_db}" "${db_name}" \
         ${task.cpus} ${levels_arg}

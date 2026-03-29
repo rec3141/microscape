@@ -3,7 +3,7 @@
 # dada2_denoise.py — Denoise, merge pairs, and build a sequence table (per plate)
 #
 # Python mirror of dada2_denoise.R. For each sample on a plate:
-#   1. Dereplicate forward and reverse filtered reads via dada2gpu
+#   1. Dereplicate forward and reverse filtered reads via dada2py
 #   2. Apply the DADA2 denoising algorithm using pre-learned error models
 #   3. Merge denoised forward/reverse pairs (overlap alignment)
 #   4. Combine all merged samples into a sequence table (pandas DataFrame)
@@ -28,8 +28,7 @@ import pickle
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, "/data/dada2_gpu")
-import dada2gpu
+import py as dada2py
 
 
 # ---------------------------------------------------------------------------
@@ -261,13 +260,13 @@ for i, sample_name in enumerate(sample_names):
     print(f"[INFO] Processing: {sample_name}")
 
     # Dereplicate: collapse identical reads, track abundances
-    derepF = dada2gpu.derep_fastq(fwd_files[i])
-    derepR = dada2gpu.derep_fastq(rev_files[i])
+    derepF = dada2py.derep_fastq(fwd_files[i])
+    derepR = dada2py.derep_fastq(rev_files[i])
 
     # Denoise: apply error model to distinguish real variants from errors
     try:
-        ddF = dada2gpu.dada(derepF, err=errF)
-        ddR = dada2gpu.dada(derepR, err=errR)
+        ddF = dada2py.dada(derepF, err=errF)
+        ddR = dada2py.dada(derepR, err=errR)
     except Exception as e:
         print(f"[WARNING] {sample_name}: dada() failed: {e}")
         continue
