@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with microSCAPE"
+title: "Getting Started with microscapeR"
 author: "R. Eric Collins"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{Getting Started with microSCAPE}
+  %\VignetteIndexEntry{Getting Started with microscapeR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,17 +18,17 @@ knitr::opts_chunk$set(eval = FALSE)
 
 # Installation
 
-Install microSCAPE from Bioconductor:
+Install microscapeR from Bioconductor:
 
 ```{r install}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("microSCAPE")
+BiocManager::install("microscapeR")
 ```
 
 # Overview
 
-microSCAPE provides downstream analysis tools for amplicon sequencing data
+microscapeR provides downstream analysis tools for amplicon sequencing data
 produced by DADA2. The typical workflow proceeds through these steps:
 
 1. **Filter** the sequence table with `filterSeqtab()`
@@ -41,7 +41,7 @@ produced by DADA2. The typical workflow proceeds through these steps:
 # Quick Start
 
 ```{r quickstart}
-library(microSCAPE)
+library(microscapeR)
 library(data.table)
 
 ## Assume 'seqtab' is a long-format data.table with columns:

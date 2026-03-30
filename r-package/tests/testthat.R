@@ -1,4 +1,4 @@
 library(testthat)
-library(microSCAPE)
+library(microscapeR)
 
-test_check("microSCAPE")
+test_check("microscapeR")

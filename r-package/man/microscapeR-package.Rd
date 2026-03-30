@@ -1,6 +1,6 @@
-\name{microSCAPE-package}
-\alias{microSCAPE-package}
-\alias{microSCAPE}
+\name{microscapeR-package}
+\alias{microscapeR-package}
+\alias{microscapeR}
 \docType{package}
 \title{
   Downstream Analysis Tools for Amplicon Sequencing Data
@@ -24,7 +24,7 @@
     \item \code{\link{sparccNetwork}} -- CLR-based correlation network
   }
 
-  See \code{vignette("microSCAPE")} for a usage overview.
+  See \code{vignette("microscapeR")} for a usage overview.
 }
 \author{
   R. Eric Collins \email{recollins@alaska.edu}

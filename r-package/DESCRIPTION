@@ -1,4 +1,4 @@
-Package: microSCAPE
+Package: microscapeR
 Title: Downstream Analysis Tools for Amplicon Sequencing Data
 Version: 0.99.0
 Authors@R: person("R. Eric", "Collins", email="recollins@alaska.edu",
@@ -8,14 +8,14 @@ Description: Provides downstream analysis tools for amplicon sequencing
     MIMARKS metadata loading, taxonomic renormalization, phylogenetic tree
     construction, Bray-Curtis ordination with t-SNE, and SparCC-style
     correlation network analysis. Designed as a companion to the dada2
-    Bioconductor package.
+    Bioconductor package and the Python microscape package.
 License: BSD_3_clause + file LICENSE
 Depends: R (>= 4.4)
-Imports: data.table, ape, Biostrings, DECIPHER, stats, utils, methods
-Suggests: testthat (>= 3.0), BiocStyle, knitr, rmarkdown, dada2
+Imports: data.table, ape, Biostrings, DECIPHER, stats, utils
+Suggests: testthat (>= 3.0), BiocStyle, knitr, rmarkdown, dada2, Rtsne
 biocViews: Sequencing, Microbiome, Metagenomics, Clustering, Visualization
-URL: https://github.com/rec3141/microscape
-BugReports: https://github.com/rec3141/microscape/issues
+URL: https://github.com/rec3141/microscapeR
+BugReports: https://github.com/rec3141/microscapeR/issues
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
