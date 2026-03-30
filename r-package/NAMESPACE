@@ -1,0 +1,6 @@
+export(filterSeqtab, loadMetadata, renormalize, buildPhylogeny,
+       ordinateSamples, sparccNetwork)
+importFrom(data.table, data.table, fread, setDT, setnames, ":=", ".N", ".SD")
+importFrom(ape, nj, write.tree)
+importFrom(stats, dist, prcomp, cor)
+importFrom(utils, read.csv, read.delim)
