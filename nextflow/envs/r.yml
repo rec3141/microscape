@@ -1,35 +1,11 @@
 name: microscape-r
 channels:
-  - conda-forge
   - bioconda
+  - conda-forge
 dependencies:
-  # Core
-  - r-base=4.3
-  - r-data.table
-  - r-ggplot2
-  - r-tidyr
-  # DADA2
-  - bioconductor-dada2=1.30
-  - bioconductor-shortread=1.60
-  # Phylogeny
+  - r-base >=4.1
+  - bioconductor-dada2
   - bioconductor-decipher
-  - bioconductor-biostrings
+  - r-data.table
   - r-ape
-  # Clustering
-  - r-rtsne
-  - r-paralleldist
-  - r-gmodels
-  # Network
-  - r-igraph
-  - r-matrix
-  # Shiny
-  - r-shiny
-  - r-plotly
-  - r-dt
-  - r-htmlwidgets
-  # SpiecEasi dependency
-  - bioconductor-phyloseq
-  # Build tools for installing SpiecEasi from GitHub
-  - r-devtools
-  - r-remotes
-  - compilers
+  - cutadapt

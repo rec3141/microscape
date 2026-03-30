@@ -1,15 +1,10 @@
 name: microscape-python
 channels:
-  - conda-forge
   - bioconda
+  - conda-forge
 dependencies:
-  - python=3.11
-  - cutadapt=4.9
-  - biopython
-  - pigz
-  # For Python DADA2 pipeline (--lang python)
-  - numpy
-  - pandas
-  - matplotlib
-  - scipy
-  - scikit-learn
+  - python >=3.10
+  - papa2
+  - microscape
+  - cutadapt
+  - mafft

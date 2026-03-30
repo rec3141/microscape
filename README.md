@@ -1,33 +1,104 @@
-# Microscape: Amplicon Sequencing Analysis Pipeline
+# microscape
 
-Visualizing Microbial Landscapes
+**Downstream analysis toolkit for amplicon sequencing data**
 
-Live demo: http://cryomics.org/microscape
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
+[![Container](https://github.com/rec3141/microscape/actions/workflows/build-container.yml/badge.svg)](https://github.com/rec3141/microscape/actions/workflows/build-container.yml)
 
-![Microscape Samples](microscape-samples.png)
-![Microscape Taxa](microscape-taxa.png)
-![Microscape Phylogeny](microscape-phylogeny.png)
+`microscape` is a Python package and Nextflow pipeline for downstream analysis of amplicon sequencing data. It takes the output of [papa2](https://github.com/rec3141/papa2) (or any DADA2-style sequence table) and provides QC filtering, metadata integration, taxonomic renormalization, phylogenetic tree construction, ordination, co-occurrence network analysis, and visualization export.
 
-## Overview
+Full documentation: **https://rec3141.github.io/microscape**
 
-Microscape is a Nextflow pipeline for amplicon sequencing analysis, from raw
-reads to interactive visualization. It uses DADA2 as the core denoising
-engine and produces an R Shiny app for exploring microbial communities.
+---
 
-The pipeline takes demultiplexed paired-end FASTQ files and produces:
-- **Sequence table**: sample-by-ASV count matrix
-- **Taxonomy**: multi-database taxonomic classifications with bootstrap support
-- **Normalized tables**: per-group proportional abundances (prokaryote, eukaryote, chloroplast, mitochondria)
-- **Phylogeny**: multiple sequence alignment and neighbor-joining tree (optional)
-- **Visualizations**: t-SNE ordinations, SparCC networks, interactive Shiny app
+## Key Features
 
-## Quick Start
+- **Python-first** -- 8 composable functions covering the full post-denoising workflow
+- **Nextflow pipeline** -- reproducible, scalable execution from raw reads to visualization
+- **Works with papa2** -- designed as the downstream companion to [papa2](https://github.com/rec3141/papa2) for a fully Python-native amplicon workflow
+- **Flexible filtering** -- length, prevalence, abundance, and depth thresholds
+- **Multi-database taxonomy** -- parallel classification against SILVA, PR2, UNITE, or any custom reference
+- **Ordination and networks** -- Bray-Curtis t-SNE/PCA and SparCC correlation networks
+- **Container-ready** -- Docker and Apptainer images on GHCR
+
+---
+
+## Quick Install
+
+### Bioconda (recommended)
 
 ```bash
-# Basic run with SILVA taxonomy
+conda install -c bioconda microscape
+```
+
+### From source
+
+```bash
+git clone https://github.com/rec3141/microscape.git
+cd microscape
+pip install -e .
+```
+
+### Container
+
+```bash
+# Docker
+docker pull ghcr.io/rec3141/microscape:latest
+docker run -v $(pwd):/data ghcr.io/rec3141/microscape python3 my_script.py
+
+# Apptainer (HPC)
+apptainer pull microscape.sif docker://ghcr.io/rec3141/microscape:latest
+apptainer exec microscape.sif python3 my_script.py
+```
+
+---
+
+## Usage
+
+```python
+import microscape
+
+# 1. Filter the sequence table (length, prevalence, abundance, depth)
+seqtab = microscape.filter_seqtab(
+    "seqtab_nochim.pkl",
+    min_seq_length=50, min_samples=2, min_seqs=3, min_reads=100,
+)
+microscape.plot_filter_summary(seqtab, output="filter_summary.png")
+
+# 2. Load sample metadata (MIMARKS-compliant TSV)
+meta = microscape.load_metadata("metadata.tsv", seqtab)
+
+# 3. Renormalize by taxonomic group (prokaryote, eukaryote, chloroplast, mitochondria)
+norm_tables = microscape.renormalize(seqtab, taxonomy="taxonomy_silva.pkl")
+
+# 4. Build phylogenetic tree (MAFFT alignment + neighbor-joining)
+tree = microscape.build_phylogeny(seqtab)
+
+# 5. Ordination (Bray-Curtis t-SNE or PCA)
+coords = microscape.ordinate(seqtab, method="tsne")
+
+# 6. Co-occurrence network (SparCC)
+network = microscape.sparcc_network(seqtab)
+
+# 7. Export visualization bundle (JSON for web viewer)
+microscape.export_viz(seqtab, meta, taxonomy, tree, coords, network, outdir="viz/")
+```
+
+---
+
+## Nextflow Pipeline
+
+The Nextflow pipeline runs the full workflow from raw reads to visualization. DADA2 denoising steps use [papa2](https://github.com/rec3141/papa2).
+
+```bash
+# Install papa2 for the denoising steps
+conda install -c bioconda papa2
+
+# Run the pipeline
 nextflow run nextflow/main.nf \
     --input /path/to/reads \
-    --ref_databases "silva:/path/to/silva_train_set.fasta:Domain,Phylum,Class,Order,Family,Genus" \
+    --ref_databases "silva:/db/silva.fasta:Domain,Phylum,Class,Order,Family,Genus" \
     -resume
 
 # Multiple databases + phylogeny
@@ -37,174 +108,78 @@ nextflow run nextflow/main.nf \
     --run_phylogeny \
     --dada_cpus 16 \
     -resume
-
-# With persistent cache (skip completed steps across runs)
-nextflow run nextflow/main.nf \
-    --input /path/to/reads \
-    --ref_databases "silva:/db/silva.fasta:Domain,Phylum,Class,Order,Family,Genus" \
-    --store_dir /scratch/microscape_cache \
-    -resume
 ```
 
 Run `nextflow run nextflow/main.nf --help` for all options.
 
-## Pipeline Stages
+### Pipeline Stages
 
-### Stage A: Preprocessing and DADA2
+#### Stage A: Preprocessing and DADA2
 
 | Step | Process | Description |
 |------|---------|-------------|
 | 1 | `DEMULTIPLEX` | Optional inner-barcode demultiplexing (Mr_Demuxy) |
-| 2 | `REMOVE_PRIMERS` | Primer trimming with cutadapt (auto-selects by 16S/18S/ITS prefix) |
+| 2 | `REMOVE_PRIMERS` | Primer trimming with cutadapt |
 | 3 | `DADA2_FILTER_TRIM` | Per-sample quality filtering (maxEE, truncQ, PhiX removal) |
-| 4 | `DADA2_LEARN_ERRORS` | Per-plate error model learning (plates share PCR history) |
+| 4 | `DADA2_LEARN_ERRORS` | Per-plate error model learning |
 | 5 | `DADA2_DENOISE` | Denoising, pair merging, per-plate chimera removal |
 | 6 | `MERGE_SEQTABS` | Merge per-plate tables (long-format, memory-efficient) |
 | 7 | `REMOVE_CHIMERAS` | Sparse consensus chimera removal on merged data |
 | 8 | `FILTER_SEQTAB` | Length, prevalence, abundance, and depth filtering |
 
-### Stage B: Taxonomy and Normalization
+#### Stage B: Taxonomy, Phylogeny, and Normalization
 
 | Step | Process | Description |
 |------|---------|-------------|
 | 9 | `ASSIGN_TAXONOMY` | Naive Bayesian classification (one task per ref DB, parallel) |
-| 10 | `BUILD_PHYLOGENY` | DECIPHER alignment + NJ tree (optional, `--run_phylogeny`) |
+| 10 | `BUILD_PHYLOGENY` | MAFFT alignment + NJ tree (optional, `--run_phylogeny`) |
 | 11 | `RENORMALIZE` | Group ASVs by taxonomy and normalize within groups |
 
-### Stage C: Visualization (coming soon)
+#### Stage C: Ordination and Networks
 
 | Step | Process | Description |
 |------|---------|-------------|
 | 12 | `LOAD_METADATA` | Sample metadata integration |
 | 13 | `CLUSTER_TSNE` | t-SNE ordination of samples and ASVs |
 | 14 | `NETWORK_ANALYSIS` | SparCC correlation networks |
-| 15 | `BUILD_SHINY` | Interactive Shiny app |
+| 15 | `EXPORT_VIZ` | JSON export for web visualization |
 
-## Parameters
+---
 
-### Input/Output
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `--input` | required | Directory of paired-end `*.fastq.gz` files |
-| `--outdir` | `results` | Output directory |
-| `--store_dir` | off | Persistent cache (skip completed steps across runs) |
-
-### Primer Removal
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `--primer_auto` | `true` | Auto-select primer file by filename prefix |
-| `--primers` | auto | Override with a specific primer FASTA |
-| `--primer_error_rate` | `0.12` | Cutadapt max error rate |
-
-### DADA2
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `--maxEE` | `2` | Max expected errors per read |
-| `--truncQ` | `11` | Truncate at first base with quality <= Q |
-| `--maxN` | `0` | Max Ns allowed |
-| `--truncLen_fwd` | `0` | Truncate forward reads at position N (0 = off) |
-| `--truncLen_rev` | `0` | Truncate reverse reads at position N (0 = off) |
-| `--min_overlap` | `10` | Min overlap for pair merging |
-
-### QC Filtering
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `--min_seq_length` | `50` | Remove ASVs shorter than N bp |
-| `--min_samples` | `2` | Remove ASVs in fewer than N samples |
-| `--min_seqs` | `3` | Remove ASVs with fewer than N total reads |
-| `--min_reads` | `100` | Remove samples with fewer than N reads |
-
-### Taxonomy
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `--ref_databases` | none | Ref DBs (`"name:path:Levels;..."`) |
-| `--run_phylogeny` | `false` | Build phylogenetic tree |
-
-### Resources
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `--threads` | `8` | General thread count |
-| `--dada_cpus` | `8` | CPUs for DADA2 processes |
-| `--dada_memory` | `16 GB` | Memory for DADA2 processes |
-
-## Architecture
+## Project Layout
 
 ```
-nextflow/
-├── main.nf              # Workflow orchestration
-├── nextflow.config      # Parameters, profiles, resources
-├── modules/             # Nextflow process definitions
-│   ├── dada2.nf         #   DADA2_FILTER_TRIM, LEARN_ERRORS, DENOISE
-│   ├── demultiplex.nf   #   DEMULTIPLEX
-│   ├── merge.nf         #   MERGE_SEQTABS, REMOVE_CHIMERAS, FILTER_SEQTAB
-│   ├── primers.nf       #   REMOVE_PRIMERS
-│   ├── phylogeny.nf     #   BUILD_PHYLOGENY
-│   ├── renormalize.nf   #   RENORMALIZE
-│   └── taxonomy.nf      #   ASSIGN_TAXONOMY
-├── bin/                 # Standalone R scripts (runnable outside Nextflow)
-│   ├── dada2_filter_trim.R
-│   ├── dada2_learn_errors.R
-│   ├── dada2_denoise.R
-│   ├── merge_seqtabs.R
-│   ├── remove_chimeras.R
-│   ├── filter_seqtab.R
-│   ├── assign_taxonomy.R
-│   ├── build_phylogeny.R
-│   └── renormalize.R
-├── envs/                # Conda environment specs
-│   ├── cutadapt.yml
-│   ├── dada2.yml
-│   ├── demux.yml
-│   └── phylo.yml
-└── primers/             # Primer FASTA files
-    ├── primers-all.fa
-    ├── primers-bac.fa
-    ├── primers-euk.fa
-    └── primers-its.fa
+microscape/          Python package
+  __init__.py          Public API (8 functions)
+  filter.py            filter_seqtab, plot_filter_summary
+  metadata.py          load_metadata
+  renormalize.py       renormalize
+  phylogeny.py         build_phylogeny
+  ordination.py        ordinate
+  network.py           sparcc_network
+  viz.py               export_viz
+nextflow/            Nextflow pipeline
+  main.nf              Workflow orchestration
+  nextflow.config      Parameters, profiles, resources
+  modules/             Process definitions
+  bin/                 Standalone R scripts (DADA2 steps)
+  envs/                Conda environment specs
+  primers/             Primer FASTA files
+conda/               Bioconda recipe
 ```
 
-## Data Format
+---
 
-The pipeline uses **long-format data.table** as its canonical representation
-from the merge step onward:
+## Citation
 
-```
-sample          sequence            count
-plate1_A01      TACGGAGGATGCGA...   1523
-plate1_A01      TACGGAGGATCCGA...   847
-plate1_A02      TACGGAGGATGCGA...   2041
-```
+If you use microscape in published research, please cite the original DADA2 paper:
 
-This avoids the memory cost of materializing a sparse dense matrix (samples x
-ASVs). For large datasets (4K+ samples, 100K+ ASVs), the dense matrix can
-exceed available memory while the long format uses only the non-zero entries.
+> Callahan BJ, McMurdie PJ, Rosen MJ, Han AW, Johnson AJA, Holmes SP (2016).
+> **DADA2: High-resolution sample inference from Illumina amplicon data.**
+> *Nature Methods*, 13, 581-583. https://doi.org/10.1038/nmeth.3869
 
-A wide-format matrix (`seqtab_final_wide.rds`) is also produced by the filter
-step for tools that require it.
+---
 
-### Sparse Chimera Removal
+## License
 
-The chimera removal step (`remove_chimeras.R`) includes a reimplementation of
-dada2's `removeBimeraDenovo(method="consensus")` that operates on long-format
-data. It reuses dada2's C-level `isBimera()` for alignment but avoids the
-dense matrix, with per-ASV checks parallelized via `mclapply`.
-
-## Profiles
-
-```bash
--profile standard   # Local execution (default)
--profile test       # Reduced resources for testing
--profile slurm      # Submit to SLURM cluster
-```
-
-## Dependencies
-
-- [Nextflow](https://nextflow.io/) >= 23.04.0
-- [Conda](https://docs.conda.io/) / [Mamba](https://mamba.readthedocs.io/) (environments created automatically)
-- R packages: dada2, ShortRead, data.table, ape, DECIPHER, Biostrings
-- [cutadapt](https://cutadapt.readthedocs.io/) for primer removal
-
-## Credits
-
-This pipeline uses [DADA2](https://benjjneb.github.io/dada2/) as the core
-denoising engine (Callahan et al. 2016).
+BSD-3-Clause -- see [LICENSE](LICENSE).

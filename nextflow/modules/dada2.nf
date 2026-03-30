@@ -6,13 +6,13 @@
 //   3. DADA2_DENOISE       — per-plate denoising + pair merging (uses --dada_engine)
 //
 // --dada_engine controls which DADA2 implementation to use:
-//   'R' (default) = R dada2 package (reference implementation)
-//   'python' = dada2 py (GPU-accelerated, standalone C library)
+//   'python' (default) = papa2 (byte-identical to R, no R dependency)
+//   'R' = R dada2 package (reference implementation)
 //
 // --lang controls filter_trim and downstream scripts independently.
 
-// Resolve effective DADA2 engine: explicit param > lang fallback > 'R' default
-def dadaEngine() { return params.dada_engine ?: (params.lang == 'python' ? 'R' : params.lang) }
+// Resolve effective DADA2 engine: explicit param > lang fallback
+def dadaEngine() { return params.dada_engine ?: params.lang }
 
 // Output extensions: dada2 steps always output .rds when engine=R
 def errExt() { return dadaEngine() == 'python' ? 'pkl' : 'rds' }
