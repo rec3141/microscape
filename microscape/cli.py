@@ -55,6 +55,24 @@ def main(argv=None):
     aq.add_argument("-o", "--output", help="Write results to TSV file")
     aq.add_argument("-v", "--verbose", action="store_true")
 
+    # -- prep-reads --
+    pr = sub.add_parser("prep-reads",
+                        help="Symlink FASTQs with run/plate naming for pipeline input")
+    pr.add_argument("metadata", help="Metadata CSV/TSV file")
+    pr.add_argument("reads_dir", help="Directory containing input FASTQ files")
+    pr.add_argument("output_dir", help="Output directory for symlinks")
+    pr.add_argument("--sample-col", default="Run",
+                    help="Column matching sample IDs to filenames [default: Run]")
+    pr.add_argument("--run-col", default="dada_run",
+                    help="Column for sequencing run grouping [default: dada_run]")
+    pr.add_argument("--plate-col", default="dada_plate",
+                    help="Column for plate grouping [default: dada_plate]")
+    pr.add_argument("--default-run", default="run1",
+                    help="Default run name if column missing [default: run1]")
+    pr.add_argument("--default-plate", default="plate1",
+                    help="Default plate name if column missing [default: plate1]")
+    pr.add_argument("-v", "--verbose", action="store_true")
+
     args = parser.parse_args(argv)
 
     if args.command is None:
@@ -63,3 +81,14 @@ def main(argv=None):
 
     if args.command == "auto-trim":
         _cmd_auto_trim(args)
+    elif args.command == "prep-reads":
+        from .prep import prep_reads
+        prep_reads(
+            args.metadata, args.reads_dir, args.output_dir,
+            sample_col=args.sample_col,
+            run_col=args.run_col,
+            plate_col=args.plate_col,
+            default_run=args.default_run,
+            default_plate=args.default_plate,
+            verbose=args.verbose,
+        )
