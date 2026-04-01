@@ -83,12 +83,17 @@ def auto_trim(
     """
     fwd_files = sorted(
         glob.glob(os.path.join(input_dir, "*_1.fastq.gz")) +
-        glob.glob(os.path.join(input_dir, "*_R1*.fastq.gz"))
+        glob.glob(os.path.join(input_dir, "*_R1*.fastq.gz")) +
+        glob.glob(os.path.join(input_dir, "*_R1.*.fastq.gz"))
     )
     rev_files = sorted(
         glob.glob(os.path.join(input_dir, "*_2.fastq.gz")) +
-        glob.glob(os.path.join(input_dir, "*_R2*.fastq.gz"))
+        glob.glob(os.path.join(input_dir, "*_R2*.fastq.gz")) +
+        glob.glob(os.path.join(input_dir, "*_R2.*.fastq.gz"))
     )
+    # Deduplicate (patterns may overlap)
+    fwd_files = sorted(set(fwd_files))
+    rev_files = sorted(set(rev_files))
 
     if not fwd_files or not rev_files:
         raise FileNotFoundError(
