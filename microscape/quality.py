@@ -37,21 +37,31 @@ def _read_quals(files: List[str], n_reads: int) -> List[List[int]]:
 
 def _find_trunc_pos(quals_list: List[List[int]], min_q: float,
                     window: int) -> int:
-    """Find position where rolling median quality drops below threshold."""
+    """Find position where rolling median quality drops below threshold.
+
+    Returns the earlier of: (a) where quality drops below min_q, or
+    (b) the 10th percentile read length, so short reads aren't rejected.
+    """
     if not quals_list:
         return 0
-    max_len = max(len(q) for q in quals_list)
+    lengths = [len(q) for q in quals_list]
+    max_len = max(lengths)
+    # Don't exceed the 10th percentile read length so we don't reject
+    # short reads due to truncation alone
+    len_cap = int(np.percentile(lengths, 10))
     mat = np.full((len(quals_list), max_len), np.nan)
     for i, q in enumerate(quals_list):
         mat[i, :len(q)] = q
     medians = np.nanmedian(mat, axis=0)
     if len(medians) < window:
-        return int(len(medians))
+        return min(int(len(medians)), len_cap)
     rolling = np.convolve(medians, np.ones(window) / window, mode="valid")
+    quality_pos = int(len(medians))
     for i, val in enumerate(rolling):
         if val < min_q:
-            return i + window // 2
-    return int(len(medians))
+            quality_pos = i + window // 2
+            break
+    return min(quality_pos, len_cap)
 
 
 def auto_trim(
