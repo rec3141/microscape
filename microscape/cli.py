@@ -32,6 +32,58 @@ def _cmd_auto_trim(args):
                 f.write(f"{key}\t{val}\n")
 
 
+def _cmd_serve(args):
+    """Serve the viz app pointing at pipeline results."""
+    import os
+    import shutil
+    import subprocess
+
+    data_dir = os.path.abspath(args.data_dir)
+    if not os.path.isdir(data_dir):
+        print(f"ERROR: {data_dir} is not a directory", file=sys.stderr)
+        sys.exit(1)
+
+    # Find viz app source
+    viz_dir = args.viz_dir
+    if viz_dir is None:
+        # Try common locations
+        candidates = [
+            os.path.join(os.path.dirname(data_dir), "..", "viz"),  # results/../viz (pipeline dir)
+            os.path.join(os.getcwd(), "viz"),
+        ]
+        # Also check if microscape-nf is a sibling or parent
+        for parent in [os.getcwd(), os.path.dirname(os.getcwd())]:
+            candidates.append(os.path.join(parent, "microscape-nf", "viz"))
+        for c in candidates:
+            if os.path.isfile(os.path.join(c, "package.json")):
+                viz_dir = c
+                break
+
+    if viz_dir is None or not os.path.isfile(os.path.join(viz_dir, "package.json")):
+        print("ERROR: Cannot find viz app. Pass --viz-dir /path/to/microscape-nf/viz",
+              file=sys.stderr)
+        sys.exit(1)
+
+    viz_dir = os.path.abspath(viz_dir)
+
+    # Install deps if needed
+    if not os.path.isdir(os.path.join(viz_dir, "node_modules")):
+        print(f"Installing viz dependencies in {viz_dir}...")
+        subprocess.run(["npm", "install"], cwd=viz_dir, check=True)
+
+    print(f"Serving viz at http://localhost:{args.port}")
+    print(f"Data: {data_dir}")
+    print(f"App:  {viz_dir}")
+    print("Press Ctrl+C to stop")
+
+    env = os.environ.copy()
+    env["VIZ_DATA_DIR"] = data_dir
+    subprocess.run(
+        ["npx", "vite", "--host", "0.0.0.0", "--port", str(args.port)],
+        cwd=viz_dir, env=env,
+    )
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="microscape",
@@ -73,6 +125,14 @@ def main(argv=None):
                     help="Default plate name if column missing [default: plate1]")
     pr.add_argument("-v", "--verbose", action="store_true")
 
+    # -- serve --
+    sv = sub.add_parser("serve",
+                        help="Serve the viz app with pipeline results")
+    sv.add_argument("data_dir", help="Directory containing viz JSON files (results/viz/)")
+    sv.add_argument("--port", type=int, default=5174, help="Port [default: 5174]")
+    sv.add_argument("--viz-dir", default=None,
+                    help="Path to viz app source [default: auto-detect from microscape-nf]")
+
     args = parser.parse_args(argv)
 
     if args.command is None:
@@ -92,3 +152,5 @@ def main(argv=None):
             default_plate=args.default_plate,
             verbose=args.verbose,
         )
+    elif args.command == "serve":
+        _cmd_serve(args)
