@@ -36,3 +36,5 @@ bio = [
 
 [tool.setuptools.packages.find]
 include = ["microscape*"]
+[project.scripts]
+microscape = "microscape.cli:main"
