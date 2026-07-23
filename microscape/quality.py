@@ -36,19 +36,25 @@ def _read_quals(files: List[str], n_reads: int) -> List[List[int]]:
 
 
 def _find_trunc_pos(quals_list: List[List[int]], min_q: float,
-                    window: int) -> int:
+                    window: int, min_length: int = 0) -> int:
     """Find position where rolling median quality drops below threshold.
 
     Returns the earlier of: (a) where quality drops below min_q, or
-    (b) the 10th percentile read length, so short reads aren't rejected.
+    (b) the 10th percentile read length (floored at *min_length*), so short
+    reads aren't rejected — while a population of short reads can't drag the
+    cap down and truncate the full-length reads into oblivion.
     """
     if not quals_list:
         return 0
     lengths = [len(q) for q in quals_list]
     max_len = max(lengths)
-    # Don't exceed the 10th percentile read length so we don't reject
-    # short reads due to truncation alone
-    len_cap = int(np.percentile(lengths, 10))
+    # Cap truncation at the 10th-percentile read length so we don't reject more
+    # than the shortest reads for being too short. But never below min_length:
+    # a large short-read population (e.g. adapter dimers) otherwise pulls the
+    # 10th percentile down to ~30bp, which truncates the full-length reads so
+    # short they can no longer overlap — mergePairs then discards ~100% of the
+    # sample. Floor at min_length, still capped at the longest observed read.
+    len_cap = min(max(int(np.percentile(lengths, 10)), int(min_length)), max_len)
     mat = np.full((len(quals_list), max_len), np.nan)
     for i, q in enumerate(quals_list):
         mat[i, :len(q)] = q
@@ -71,6 +77,7 @@ def auto_trim(
     window: int = 10,
     n_reads: int = 10000,
     n_files: int = 20,
+    min_length: int = 0,
     verbose: bool = False,
 ) -> dict:
     """Analyze quality profiles and recommend truncation lengths.
@@ -122,8 +129,8 @@ def auto_trim(
     fwd_quals = _read_quals(fwd_sample, n_reads)
     rev_quals = _read_quals(rev_sample, n_reads)
 
-    trunc_fwd = _find_trunc_pos(fwd_quals, min_quality, window)
-    trunc_rev = _find_trunc_pos(rev_quals, min_quality, window)
+    trunc_fwd = _find_trunc_pos(fwd_quals, min_quality, window, min_length)
+    trunc_rev = _find_trunc_pos(rev_quals, min_quality, window, min_length)
 
     fwd_len = max(len(q) for q in fwd_quals) if fwd_quals else 0
     rev_len = max(len(q) for q in rev_quals) if rev_quals else 0
@@ -141,4 +148,5 @@ def auto_trim(
         "rev_read_len": rev_len,
         "n_reads_sampled": len(fwd_quals),
         "min_quality": min_quality,
+        "min_length": min_length,
     }

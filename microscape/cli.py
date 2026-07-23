@@ -16,6 +16,7 @@ def _cmd_auto_trim(args):
         window=args.window,
         n_reads=args.n_reads,
         n_files=args.n_files,
+        min_length=args.min_length,
         verbose=args.verbose,
     )
 
@@ -104,6 +105,9 @@ def main(argv=None):
                     help="Reads to sample [default: 10000]")
     aq.add_argument("--n-files", type=int, default=20,
                     help="Files to sample from [default: 20]")
+    aq.add_argument("--min-length", type=int, default=0,
+                    help="Never truncate below this length, even if a short-read "
+                         "(dimer) population pulls the length cap down [default: 0 = off]")
     aq.add_argument("-o", "--output", help="Write results to TSV file")
     aq.add_argument("-v", "--verbose", action="store_true")
 
