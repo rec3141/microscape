@@ -35,6 +35,35 @@ def _read_quals(files: List[str], n_reads: int) -> List[List[int]]:
     return all_quals
 
 
+def _amplicon_lengths(lengths: List[int], floor_frac: float = 0.5) -> List[int]:
+    """Drop fragment reads before measuring the length distribution.
+
+    Amplicon libraries routinely carry adapter-dimer and primer-only fragments
+    an order of magnitude shorter than the product. Those are real reads but not
+    reads *of the amplicon*, and they make the length distribution bimodal —
+    which is what breaks a low percentile.
+
+    Measured on a real 18S library: 325 of 1,426 reads (22.8%) fell under 50 bp
+    against a modal length of 232, so the 10th percentile landed at 31 bp, deep
+    inside the fragment mode. Truncating there left 150 bp per read against a
+    277 bp amplicon, and 99.5% of pairs then failed to merge — the sample
+    vanished from the final table.
+
+    Keeping only reads of at least `floor_frac` of the median restores a
+    unimodal distribution, so the percentile measures what it is meant to. A
+    read under half the typical length cannot carry the expected product anyway,
+    and filterAndTrim would discard it regardless.
+    """
+    if not lengths:
+        return lengths
+    median = float(np.median(lengths))
+    usable = [n for n in lengths if n >= median * floor_frac]
+    # If nearly everything is a fragment the library is broken rather than
+    # bimodal, and measuring the remainder would be less honest than measuring
+    # all of it.
+    return usable if len(usable) >= max(10, 0.05 * len(lengths)) else lengths
+
+
 def _find_trunc_pos(quals_list: List[List[int]], min_q: float,
                     window: int, min_length: int = 0) -> int:
     """Find position where rolling median quality drops below threshold.
@@ -49,12 +78,15 @@ def _find_trunc_pos(quals_list: List[List[int]], min_q: float,
     lengths = [len(q) for q in quals_list]
     max_len = max(lengths)
     # Cap truncation at the 10th-percentile read length so we don't reject more
-    # than the shortest reads for being too short. But never below min_length:
-    # a large short-read population (e.g. adapter dimers) otherwise pulls the
-    # 10th percentile down to ~30bp, which truncates the full-length reads so
-    # short they can no longer overlap — mergePairs then discards ~100% of the
-    # sample. Floor at min_length, still capped at the longest observed read.
-    len_cap = min(max(int(np.percentile(lengths, 10)), int(min_length)), max_len)
+    # than the shortest reads for being too short — but measure that percentile
+    # over amplicon-length reads only. Fragments form a separate mode, and once
+    # they exceed 10% of the library the percentile falls *into* that mode and
+    # truncates the real reads below the length they need to overlap (see
+    # _amplicon_lengths). min_length stays as a floor for the pathological case.
+    len_cap = min(
+        max(int(np.percentile(_amplicon_lengths(lengths), 10)), int(min_length)),
+        max_len,
+    )
     mat = np.full((len(quals_list), max_len), np.nan)
     for i, q in enumerate(quals_list):
         mat[i, :len(q)] = q
