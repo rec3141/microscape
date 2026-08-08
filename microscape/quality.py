@@ -68,10 +68,18 @@ def _find_trunc_pos(quals_list: List[List[int]], min_q: float,
                     window: int, min_length: int = 0) -> int:
     """Find position where rolling median quality drops below threshold.
 
-    Returns the earlier of: (a) where quality drops below min_q, or
-    (b) the 10th percentile read length (floored at *min_length*), so short
-    reads aren't rejected — while a population of short reads can't drag the
-    cap down and truncate the full-length reads into oblivion.
+    Returns the quality-driven position, floored at *min_length*, then capped
+    at the 10th percentile read length so short reads aren't rejected — while a
+    population of short reads can't drag the cap down and truncate the
+    full-length reads into oblivion.
+
+    *min_length* floors the QUALITY position and nothing else. It exists so a
+    quality dip at ~30bp cannot truncate reads below the length they need to
+    overlap (issue #4). Applying it to the length cap instead asks for reads
+    that were never sequenced: dada2 discards reads shorter than truncLen, so a
+    floor above the library's real length silently returns zero reads for every
+    sample. A 2x150 run whose amplicon reads are 126bp after primer removal was
+    truncated at 148 and kept 607 of 101194 reads.
     """
     if not quals_list:
         return 0
@@ -82,24 +90,21 @@ def _find_trunc_pos(quals_list: List[List[int]], min_q: float,
     # over amplicon-length reads only. Fragments form a separate mode, and once
     # they exceed 10% of the library the percentile falls *into* that mode and
     # truncates the real reads below the length they need to overlap (see
-    # _amplicon_lengths). min_length stays as a floor for the pathological case.
-    len_cap = min(
-        max(int(np.percentile(_amplicon_lengths(lengths), 10)), int(min_length)),
-        max_len,
-    )
+    # _amplicon_lengths).
+    len_cap = min(int(np.percentile(_amplicon_lengths(lengths), 10)), max_len)
     mat = np.full((len(quals_list), max_len), np.nan)
     for i, q in enumerate(quals_list):
         mat[i, :len(q)] = q
     medians = np.nanmedian(mat, axis=0)
     if len(medians) < window:
-        return min(int(len(medians)), len_cap)
+        return min(max(int(len(medians)), int(min_length)), len_cap)
     rolling = np.convolve(medians, np.ones(window) / window, mode="valid")
     quality_pos = int(len(medians))
     for i, val in enumerate(rolling):
         if val < min_q:
             quality_pos = i + window // 2
             break
-    return min(quality_pos, len_cap)
+    return min(max(quality_pos, int(min_length)), len_cap)
 
 
 def auto_trim(

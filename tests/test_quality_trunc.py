@@ -64,3 +64,29 @@ def test_trunc_pos_recovers_a_usable_length_on_a_bimodal_sample():
     # Must clear the old floor of 150 by a wide margin: a 277 bp amplicon needs
     # well over 138 bp per read to leave any usable overlap.
     assert pos > 200, f"truncation collapsed to {pos}"
+
+
+def test_the_floor_never_asks_for_reads_longer_than_the_library():
+    """A 2x150 run whose amplicon reads are 126bp after primer removal.
+
+    dada2 discards reads shorter than truncLen, so a 150 floor applied to the
+    length cap truncates at 148 (the longest read present) and keeps 607 of
+    101194 reads — the sample survives the filter as a rounding error and the
+    run reports "no results". The floor belongs on the quality position, not on
+    the cap: it exists to stop a quality dip truncating below overlap, not to
+    ask for bases that were never sequenced.
+    """
+    lengths = [126] * 100215 + [124] * 233 + [125] * 33 + [127] * 82 + [148] * 607
+    quals = [[35] * n for n in lengths]
+    pos = quality._find_trunc_pos(quals, min_q=25.0, window=10, min_length=150)
+    assert pos <= 126, f"truncation {pos} exceeds the reads that exist"
+    kept = sum(1 for n in lengths if n >= pos)
+    assert kept > 0.99 * len(lengths), f"only {kept} of {len(lengths)} reads survive"
+
+
+def test_the_floor_still_holds_against_a_quality_cliff():
+    """Issue #4 must survive the change: a dip at ~30bp still floors to 150."""
+    lengths = [300] * 5000
+    quals = [[35] * 30 + [5] * 270 for _ in lengths]
+    pos = quality._find_trunc_pos(quals, min_q=25.0, window=10, min_length=150)
+    assert pos == 150, f"quality cliff truncated to {pos}, not the 150 floor"
