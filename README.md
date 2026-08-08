@@ -2,18 +2,7 @@
 > This package is no longer maintained. The amplicon workflow now lives in a
 > single place — the [`illumina_amplicon`](https://github.com/rec3141/danaSeq/tree/main/illumina_amplicon)
 > stage of [danaSeq](https://github.com/rec3141/danaSeq).
->
-> The pipeline only ever used one command from this package, `auto-trim`, and
-> now carries that logic itself (`bin/auto_trim.py`), vendored from
-> `microscape/quality.py` so the numerics are unchanged. `scripts/` holds the
-> pipeline's Python engine as it last ran.
->
-> The split was meant to make this installable and shareable. It did not: the
-> bioconda build sat at 0.1.0 while the pipeline pinned a git SHA, so nothing
-> consumed the published artifact — including the pipeline. What it did
-> produce was drift. The truncation floor lived in `microscape/quality.py`, in
-> the pipeline's AUTO_TRIM and again in TRUNC_POLICY, and fixing one of them
-> recovered nothing.
+
 
 # microscape
 
@@ -42,12 +31,6 @@ Full documentation: **https://rec3141.github.io/microscape**
 ---
 
 ## Quick Install
-
-### Bioconda (recommended)
-
-```bash
-conda install -c bioconda microscape
-```
 
 ### From source
 
